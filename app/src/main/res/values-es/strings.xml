@@ -11,6 +11,7 @@
 
     <string name="favourite_apps">Apps favoritas</string>
     <string name="hidden_apps">Apps ocultas</string>
+    <string name="hidden_apps_long_press_hint">Mantén pulsada una app para abrirla.</string>
     <string name="customisation">Personalización</string>
     <string name="set_default_launcher">Establecer como launcher predeterminado</string>
     <string name="settings">Ajustes</string>

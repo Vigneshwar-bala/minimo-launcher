@@ -11,6 +11,7 @@
 
     <string name="favourite_apps">Favorite Apps</string>
     <string name="hidden_apps">Hidden Apps</string>
+    <string name="hidden_apps_long_press_hint">Long-press an app to launch it.</string>
     <string name="customisation">Customization</string>
     <string name="set_default_launcher">Set Default Launcher</string>
     <string name="send_feedback">Send Feedback</string>

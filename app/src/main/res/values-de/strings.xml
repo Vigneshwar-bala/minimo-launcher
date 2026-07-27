@@ -11,6 +11,7 @@
 
     <string name="favourite_apps">Lieblings-Apps</string>
     <string name="hidden_apps">Versteckte Apps</string>
+    <string name="hidden_apps_long_press_hint">Halte eine App gedrückt, um sie zu starten.</string>
     <string name="customisation">Anpassung</string>
     <string name="set_default_launcher">Als Standard-Launcher festlegen</string>
     <string name="send_feedback">Feedback senden</string>
