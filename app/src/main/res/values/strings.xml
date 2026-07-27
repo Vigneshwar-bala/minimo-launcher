@@ -42,6 +42,16 @@
     <string name="unhide_app">Unhide App</string>
     <string name="app_info">App Info</string>
     <string name="uninstall">Uninstall</string>
+    <string name="launch_delay">Launch Delay</string>
+    <string name="launch_delay_description">Wait before opening this app.\nUse 0 for no delay.</string>
+    <string name="seconds">Seconds</string>
+    <string name="save">Save</string>
+    <plurals name="launch_delay_remaining">
+        <item quantity="one">%1$d second remaining</item>
+        <item quantity="other">%1$d seconds remaining</item>
+    </plurals>
+    <string name="ready_to_launch">Ready to launch</string>
+    <string name="launch">Launch</string>
     <string name="show_status_bar">Show Status Bar</string>
     <string name="show_navigation_bar">Show Navigation Bar</string>
     <string name="show_keyboard">Show Keyboard</string>

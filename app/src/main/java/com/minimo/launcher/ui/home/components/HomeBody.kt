@@ -33,12 +33,11 @@ import com.minimo.launcher.ui.components.TimeAndDateView
 import com.minimo.launcher.ui.home.HomeScreenState
 import com.minimo.launcher.ui.home.HomeViewModel
 import com.minimo.launcher.ui.theme.Dimens
-import com.minimo.launcher.utils.launchApp
-import com.minimo.launcher.utils.launchAppFromPreference
 import com.minimo.launcher.utils.launchAppInfo
 import com.minimo.launcher.utils.openDefaultCalendarApp
 import com.minimo.launcher.utils.openDefaultClockApp
 import com.minimo.launcher.utils.openDigitalWellbeing
+import com.minimo.launcher.utils.openPowerUsageSummary
 import com.minimo.launcher.utils.startShortcut
 import com.minimo.launcher.utils.uninstallApp
 
@@ -56,6 +55,12 @@ fun HomeBody(
     useDarkBottomSheetNavigationBarIcons: Boolean
 ) {
     val context = LocalContext.current
+
+    fun launchPreferredApp(preference: String, fallback: () -> Unit) {
+        if (!viewModel.onPreferenceAppLaunchRequest(preference)) {
+            fallback()
+        }
+    }
 
     val onSurfaceColor = MaterialTheme.colorScheme.onSurface
 
@@ -107,16 +112,20 @@ fun HomeBody(
                         textColor = textColor,
                         textShadow = textShadow,
                         onClockClick = {
-                            context.launchAppFromPreference(state.clockAppPreference) {
+                            launchPreferredApp(state.clockAppPreference) {
                                 context.openDefaultClockApp()
                             }
                         },
                         onDateClick = {
-                            context.launchAppFromPreference(state.calendarAppPreference) {
+                            launchPreferredApp(state.calendarAppPreference) {
                                 context.openDefaultCalendarApp()
                             }
                         },
-                        batteryAppPreference = state.batteryAppPreference
+                        onBatteryClick = {
+                            launchPreferredApp(state.batteryAppPreference) {
+                                context.openPowerUsageSummary()
+                            }
+                        }
                     )
                 }
 
@@ -130,7 +139,7 @@ fun HomeBody(
                         screenTime = state.screenTime,
                         refreshScreenTime = viewModel::refreshScreenTime,
                         onClick = {
-                            context.launchAppFromPreference(state.screenTimeAppPreference) {
+                            launchPreferredApp(state.screenTimeAppPreference) {
                                 context.openDigitalWellbeing()
                             }
                         },
@@ -172,13 +181,7 @@ fun HomeBody(
                     isFavourite = appInfo.isFavourite,
                     isHidden = appInfo.isHidden,
                     isWorkProfile = appInfo.isWorkProfile,
-                    onClick = {
-                        context.launchApp(
-                            appInfo.packageName,
-                            appInfo.className,
-                            appInfo.userHandle
-                        )
-                    },
+                    onClick = { viewModel.onAppLaunchRequest(appInfo) },
                     onToggleFavouriteClick = {
                         viewModel.onToggleFavouriteAppClick(
                             appInfo
@@ -187,6 +190,7 @@ fun HomeBody(
                     onRenameClick = { viewModel.onRenameAppClick(appInfo) },
                     onToggleHideClick = { viewModel.onToggleHideClick(appInfo) },
                     onAppInfoClick = { context.launchAppInfo(appInfo) },
+                    onLaunchDelayClick = { viewModel.onLaunchDelayClick(appInfo) },
                     appsArrangement = state.appsArrangementHorizontal,
                     textSize = textSize,
                     onUninstallClick = { context.uninstallApp(appInfo) },

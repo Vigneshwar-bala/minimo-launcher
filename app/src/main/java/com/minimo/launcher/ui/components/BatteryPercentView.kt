@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.minimo.launcher.utils.BatteryChangeObserver
 import com.minimo.launcher.utils.currentBatteryPercent
-import com.minimo.launcher.utils.launchAppFromPreference
-import com.minimo.launcher.utils.openPowerUsageSummary
 
 @Composable
 fun BatteryPercentView(
@@ -27,7 +25,7 @@ fun BatteryPercentView(
     fontWeight: FontWeight?,
     textColor: Color,
     textShadow: Shadow?,
-    batteryAppPreference: String
+    onClick: () -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -46,11 +44,7 @@ fun BatteryPercentView(
     }
 
     Text(
-        modifier = Modifier.clickable {
-            context.launchAppFromPreference(batteryAppPreference) {
-                context.openPowerUsageSummary()
-            }
-        },
+        modifier = Modifier.clickable(onClick = onClick),
         text = batteryPercent?.let { "$it%" } ?: "",
         fontSize = fontSize,
         fontWeight = fontWeight,

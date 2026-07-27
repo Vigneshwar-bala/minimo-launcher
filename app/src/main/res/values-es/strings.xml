@@ -42,6 +42,16 @@
     <string name="unhide_app">Mostrar app</string>
     <string name="app_info">Información de la app</string>
     <string name="uninstall">Desinstalar</string>
+    <string name="launch_delay">Retraso de apertura</string>
+    <string name="launch_delay_description">Espera antes de abrir esta app.\nUsa 0 para no aplicar retraso.</string>
+    <string name="seconds">Segundos</string>
+    <string name="save">Guardar</string>
+    <plurals name="launch_delay_remaining">
+        <item quantity="one">Queda %1$d segundo</item>
+        <item quantity="other">Quedan %1$d segundos</item>
+    </plurals>
+    <string name="ready_to_launch">Lista para abrir</string>
+    <string name="launch">Abrir</string>
     <string name="show_status_bar">Mostrar barra de estado</string>
     <string name="show_navigation_bar">Mostrar barra de navegación</string>
     <string name="show_keyboard">Mostrar teclado</string>

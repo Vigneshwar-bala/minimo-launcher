@@ -59,6 +59,7 @@ fun AppNameItem(
     onRenameClick: () -> Unit,
     onToggleHideClick: () -> Unit,
     onAppInfoClick: () -> Unit,
+    onLaunchDelayClick: () -> Unit,
     onLongClick: () -> Unit = { },
     onUninstallClick: () -> Unit,
     verticalPadding: Dp = 16.dp,
@@ -217,6 +218,10 @@ fun AppNameItem(
             onUninstallClick = {
                 appBottomSheetVisible = false
                 onUninstallClick()
+            },
+            onLaunchDelayClick = {
+                appBottomSheetVisible = false
+                onLaunchDelayClick()
             }
         )
     }

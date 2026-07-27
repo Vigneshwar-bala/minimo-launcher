@@ -59,19 +59,17 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.minimo.launcher.R
 import com.minimo.launcher.ui.components.RenameDialog
 import com.minimo.launcher.ui.home.components.AppDrawerFastScroller
 import com.minimo.launcher.ui.home.components.AppDrawerSearch
+import com.minimo.launcher.ui.home.components.AppLaunchConfirmationDialog
 import com.minimo.launcher.ui.home.components.AppNameItem
+import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.ui.home.components.MinimoSettingsItem
 import com.minimo.launcher.ui.home.components.appIconSizeFor
 import com.minimo.launcher.utils.Constants
-import com.minimo.launcher.utils.launchApp
 import com.minimo.launcher.utils.launchAppInfo
 import com.minimo.launcher.utils.uninstallApp
 import kotlinx.coroutines.delay
@@ -90,7 +88,6 @@ fun AppDrawerScreen(
     onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -137,12 +134,9 @@ fun AppDrawerScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.launchApp.collect { app ->
-                hideKeyboardWithClearFocus()
-                context.launchApp(app.packageName, app.className, app.userHandle)
-            }
+    LaunchedEffect(state.launchConfirmDialog?.deadlineElapsedRealtimeMillis) {
+        if (state.launchConfirmDialog != null) {
+            hideKeyboardWithClearFocus()
         }
     }
 
@@ -311,11 +305,7 @@ fun AppDrawerScreen(
                                     isWorkProfile = appInfo.isWorkProfile,
                                     onClick = {
                                         hideKeyboardWithClearFocus()
-                                        context.launchApp(
-                                            appInfo.packageName,
-                                            appInfo.className,
-                                            appInfo.userHandle
-                                        )
+                                        viewModel.onAppLaunchRequest(appInfo)
                                     },
                                     onToggleFavouriteClick = {
                                         viewModel.onToggleFavouriteAppClick(appInfo)
@@ -323,6 +313,9 @@ fun AppDrawerScreen(
                                     onRenameClick = { viewModel.onRenameAppClick(appInfo) },
                                     onToggleHideClick = { viewModel.onToggleHideClick(appInfo) },
                                     onAppInfoClick = { context.launchAppInfo(appInfo) },
+                                    onLaunchDelayClick = {
+                                        viewModel.onLaunchDelayClick(appInfo)
+                                    },
                                     appsArrangement = state.drawerAppsArrangementHorizontal,
                                     onLongClick = ::hideKeyboardWithClearFocus,
                                     onUninstallClick = { context.uninstallApp(appInfo) },
@@ -379,6 +372,23 @@ fun AppDrawerScreen(
             currentName = app.name,
             onRenameClick = viewModel::onRenameApp,
             onCancelClick = viewModel::onDismissRenameAppDialog
+        )
+    }
+
+    state.launchDelayDialog?.let { app ->
+        LaunchDelayDialog(
+            app = app,
+            onSave = viewModel::onUpdateLaunchDelay,
+            onDismiss = viewModel::onDismissLaunchDelayDialog
+        )
+    }
+
+    state.launchConfirmDialog?.let { pendingLaunch ->
+        AppLaunchConfirmationDialog(
+            app = pendingLaunch.app,
+            deadlineElapsedRealtimeMillis = pendingLaunch.deadlineElapsedRealtimeMillis,
+            onLaunch = viewModel::onConfirmAppLaunch,
+            onDismiss = viewModel::onDismissAppLaunch
         )
     }
 }

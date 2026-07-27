@@ -42,6 +42,7 @@ fun ReorderAppItem(
             onRenameClick = { },
             onToggleHideClick = { },
             onAppInfoClick = { },
+            onLaunchDelayClick = { },
             appsArrangement = Arrangement.Start,
             textSize = Constants.DEFAULT_HOME_TEXT_SIZE.sp,
             onUninstallClick = { },

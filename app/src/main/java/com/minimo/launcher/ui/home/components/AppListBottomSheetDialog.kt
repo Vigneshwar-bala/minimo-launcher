@@ -21,6 +21,7 @@ fun AppListBottomSheetDialog(
     onToggleHideClick: () -> Unit,
     onAppInfoClick: () -> Unit,
     onUninstallClick: () -> Unit,
+    onLaunchDelayClick: () -> Unit,
 ) {
     AppBottomSheetDialog(
         appName = appName,
@@ -49,6 +50,10 @@ fun AppListBottomSheetDialog(
         AppBottomSheetText(
             text = stringResource(R.string.app_info),
             onClick = onAppInfoClick
+        )
+        AppBottomSheetText(
+            text = stringResource(R.string.launch_delay),
+            onClick = onLaunchDelayClick
         )
         AppBottomSheetText(
             text = stringResource(R.string.uninstall),

@@ -9,6 +9,11 @@ import com.minimo.launcher.utils.Constants
 import com.minimo.launcher.utils.HomeClockMode
 import com.minimo.launcher.utils.MinimoSettingsPosition
 
+data class PendingAppLaunch(
+    val app: AppInfo,
+    val deadlineElapsedRealtimeMillis: Long
+)
+
 data class HomeScreenState(
     val initialLoaded: Boolean = false,
     val favouriteApps: List<AppInfo> = emptyList(),
@@ -16,6 +21,8 @@ data class HomeScreenState(
     val allApps: List<AppInfo> = emptyList(),
     val filteredAllApps: List<AppInfo> = emptyList(),
     val renameAppDialog: AppInfo? = null,
+    val launchDelayDialog: AppInfo? = null,
+    val launchConfirmDialog: PendingAppLaunch? = null,
     val searchText: String = "",
     val appsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,
     val drawerAppsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,

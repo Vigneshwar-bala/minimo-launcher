@@ -117,7 +117,8 @@ class AppUtils @Inject constructor(
             isHidden = isHidden,
             isWorkProfile = userHandle != myUserHandle,
             showNotificationDot = showNotificationDot,
-            orderIndex = orderIndex
+            orderIndex = orderIndex,
+            launchDelaySeconds = launchDelaySeconds
         )
     }
 
