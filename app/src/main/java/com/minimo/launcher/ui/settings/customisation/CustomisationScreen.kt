@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -46,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -168,7 +167,7 @@ fun CustomisationScreen(
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
+                        painter = painterResource(R.drawable.ic_arrow_back),
                         contentDescription = "Back",
                         modifier = Modifier.size(24.dp)
                     )
@@ -349,12 +348,14 @@ fun CustomisationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (state.showAppIconInHome || state.showAppIconInDrawer) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            AppIconSizeSlider(
-                appIconSizePercent = state.appIconSizePercent,
-                onAppIconSizePercentChanged = viewModel::onAppIconSizePercentChanged
-            )
+                AppIconSizeSlider(
+                    appIconSizePercent = state.appIconSizePercent,
+                    onAppIconSizePercentChanged = viewModel::onAppIconSizePercentChanged
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 

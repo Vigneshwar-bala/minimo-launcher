@@ -1,8 +1,6 @@
 package com.minimo.launcher.ui.home.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.minimo.launcher.R
@@ -39,7 +38,7 @@ fun AppDrawerSearch(
             onClick = onSettingsClick
         ) {
             Icon(
-                imageVector = Icons.Filled.Settings,
+                painter = painterResource(R.drawable.ic_settings),
                 tint = MaterialTheme.colorScheme.onSurface,
                 contentDescription = stringResource(R.string.settings)
             )

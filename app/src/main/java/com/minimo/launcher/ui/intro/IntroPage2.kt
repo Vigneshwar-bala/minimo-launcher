@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -17,8 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.minimo.launcher.R
+import com.minimo.launcher.ui.components.AppButton
 import com.minimo.launcher.ui.components.ToggleAppItem
 import com.minimo.launcher.ui.home.components.SearchItem
+import com.minimo.launcher.ui.theme.Dimens
 import com.minimo.launcher.utils.Constants.INTRO_MINIMUM_FAVOURITE_COUNT
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,17 +58,17 @@ internal fun IntroPage2(
                 )
             }
         }
-        IntroBottomButton(
+        AppButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.APP_HORIZONTAL_SPACING),
             text = if (state.minimumFavouriteAdded) {
                 stringResource(R.string.btn_continue)
             } else {
                 stringResource(R.string.add_at_least_to_continue, INTRO_MINIMUM_FAVOURITE_COUNT)
             },
-            onClick = {
-                if (state.minimumFavouriteAdded) {
-                    onContinueClick()
-                }
-            }
+            onClick = onContinueClick,
+            enabled = state.minimumFavouriteAdded
         )
     }
 }

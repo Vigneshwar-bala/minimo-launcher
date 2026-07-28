@@ -14,7 +14,7 @@ android {
         applicationId = "com.minimo.launcher"
         minSdk = 26
         targetSdk = 36
-        versionCode = 127
+        versionCode = 128
         versionName = "1.33.0"
     }
 
@@ -80,11 +80,8 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2026.06.01"))
 
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-core")
-    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.ui:ui-graphics")
 
-    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.appcompat:appcompat:1.7.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
 

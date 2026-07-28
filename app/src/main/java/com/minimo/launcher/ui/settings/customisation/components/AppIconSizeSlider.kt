@@ -42,6 +42,6 @@ fun AppIconSizeSlider(
             onAppIconSizePercentChanged(it.roundToInt())
         },
         valueRange = Constants.APP_ICON_SIZE_PERCENT_RANGE,
-        steps = 3
+        steps = 5
     )
 }
