@@ -372,8 +372,7 @@ class CustomisationViewModel @Inject constructor(
 
     fun onUpdateIgnoreSpecialCharacters(characters: String) {
         viewModelScope.launch {
-            val uniqueCharacters = characters.trim().toSet().joinToString("")
-            preferenceHelper.setIgnoreSpecialCharacters(uniqueCharacters)
+            preferenceHelper.setIgnoreSpecialCharacters(characters)
         }
     }
 

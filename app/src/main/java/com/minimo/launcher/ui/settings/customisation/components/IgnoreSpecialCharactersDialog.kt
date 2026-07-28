@@ -53,7 +53,7 @@ fun IgnoreSpecialCharactersDialog(
             )
         },
         confirmButton = {
-            Button(onClick = { onUpdateClick(newCharacters.text.trim()) }) {
+            Button(onClick = { onUpdateClick(newCharacters.text.toSet().joinToString("")) }) {
                 Text(stringResource(R.string.update))
             }
         },
