@@ -41,6 +41,13 @@ object StringUtils {
         }
     }
 
+    fun fastScrollerAlignmentText(context: Context, alignment: FastScrollerAlignment): String {
+        return when (alignment) {
+            FastScrollerAlignment.Left -> context.getString(R.string.left)
+            FastScrollerAlignment.Right -> context.getString(R.string.right)
+        }
+    }
+
     fun homeAppsAlignmentVerticalText(
         context: Context,
         alignment: HomeAppsAlignmentVertical?

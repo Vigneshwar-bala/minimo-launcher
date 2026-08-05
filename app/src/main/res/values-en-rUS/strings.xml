@@ -149,6 +149,7 @@
     <string name="none">None</string>
     <string name="font">Font</string>
     <string name="fast_scroller">Fast Scroller</string>
+    <string name="fast_scroller_alignment">Fast Scroller Alignment</string>
     <string name="fast_scroller_description">Show an A-Z fast scroller on the app drawer</string>
     <string name="back_opens_drawer">Back Opens Drawer</string>
     <string name="back_opens_drawer_description">Press Back on home screen to open the app drawer</string>

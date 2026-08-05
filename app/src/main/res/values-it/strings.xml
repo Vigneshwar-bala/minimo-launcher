@@ -149,6 +149,7 @@
     <string name="none">Nessuna</string>
     <string name="font">Carattere</string>
     <string name="fast_scroller">Scorrimento rapido</string>
+    <string name="fast_scroller_alignment">Allineamento scorrimento rapido</string>
     <string name="fast_scroller_description">Mostra uno scorrimento rapido A-Z nel drawer</string>
     <string name="back_opens_drawer">Indietro apre il drawer</string>
     <string name="back_opens_drawer_description">Premi Indietro nella schermata Home per aprire il drawer</string>

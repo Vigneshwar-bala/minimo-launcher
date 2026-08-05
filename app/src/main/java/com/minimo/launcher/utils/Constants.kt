@@ -32,6 +32,10 @@ enum class AppIconAlignment {
     Left, Right
 }
 
+enum class FastScrollerAlignment {
+    Left, Right
+}
+
 enum class HomeAppsAlignmentVertical {
     Top, Center, Bottom
 }

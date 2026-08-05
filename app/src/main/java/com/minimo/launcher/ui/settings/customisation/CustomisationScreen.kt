@@ -71,6 +71,7 @@ import com.minimo.launcher.ui.settings.customisation.components.EnableAccessibil
 import com.minimo.launcher.ui.settings.customisation.components.EnableAppUsageDialog
 import com.minimo.launcher.ui.settings.customisation.components.EnableNotificationsDialog
 import com.minimo.launcher.ui.settings.customisation.components.EnableSetWallpaperToThemeColorDialog
+import com.minimo.launcher.ui.settings.customisation.components.FastScrollerAlignmentDropdown
 import com.minimo.launcher.ui.settings.customisation.components.FontDropdown
 import com.minimo.launcher.ui.settings.customisation.components.IgnoreSpecialCharacters
 import com.minimo.launcher.ui.settings.customisation.components.MinimoSettingsPositionDropdown
@@ -83,6 +84,7 @@ import com.minimo.launcher.utils.AndroidUtils
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
 import com.minimo.launcher.utils.Constants.KEYBOARD_OPEN_DELAY_RANGE
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -770,6 +772,26 @@ fun CustomisationScreen(
                 isChecked = state.enableFastScroller,
                 onToggleClick = viewModel::onToggleFastScroller
             )
+
+            if (state.enableFastScroller) {
+                FastScrollerAlignmentDropdown(
+                    selectedOption = StringUtils.fastScrollerAlignmentText(
+                        context,
+                        state.fastScrollerAlignment
+                    ),
+                    options = listOf(
+                        FastScrollerAlignment.Left to StringUtils.fastScrollerAlignmentText(
+                            context,
+                            FastScrollerAlignment.Left
+                        ),
+                        FastScrollerAlignment.Right to StringUtils.fastScrollerAlignmentText(
+                            context,
+                            FastScrollerAlignment.Right
+                        )
+                    ),
+                    onOptionSelected = viewModel::onFastScrollerAlignmentChanged
+                )
+            }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 

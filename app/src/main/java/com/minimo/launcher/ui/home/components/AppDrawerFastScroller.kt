@@ -56,6 +56,7 @@ fun AppDrawerFastScroller(
     apps: List<AppInfo>,
     listState: LazyListState,
     modifier: Modifier = Modifier,
+    isAtStart: Boolean = false,
     onInteractionStart: () -> Unit = {},
     textColor: Color = MaterialTheme.colorScheme.onSurface,
     textShadow: Shadow? = null,
@@ -260,6 +261,7 @@ fun AppDrawerFastScroller(
             FloatingLetterIndicator(
                 letter = currentSelectedLetter,
                 yPosition = currentDragPosition,
+                isAtStart = isAtStart,
                 indicatorColor = indicatorColor,
                 indicatorTextColor = indicatorTextColor
             )
@@ -271,12 +273,14 @@ fun AppDrawerFastScroller(
 private fun FloatingLetterIndicator(
     letter: String,
     yPosition: Float,
+    isAtStart: Boolean,
     indicatorColor: Color,
     indicatorTextColor: Color,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
     val indicatorSize = 80.dp
+    val horizontalOffset = if (isAtStart) 60.dp else (-60).dp
 
     Surface(
         modifier = modifier
@@ -284,7 +288,7 @@ private fun FloatingLetterIndicator(
             .aspectRatio(1f)
             .offset {
                 IntOffset(
-                    x = with(density) { (-60).dp.roundToPx() },
+                    x = with(density) { horizontalOffset.roundToPx() },
                     y = (yPosition - with(density) { (indicatorSize / 2).toPx() }).toInt()
                 )
             },

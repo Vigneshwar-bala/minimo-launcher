@@ -6,6 +6,7 @@ import com.minimo.launcher.data.AppInfoDao
 import com.minimo.launcher.data.PreferenceHelper
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -82,6 +83,7 @@ class CustomisationViewModel @Inject constructor(
                             swipeRightAppPreference = prefs.swipeRightAppPreference,
                             keyboardOpenDelay = prefs.keyboardOpenDelay,
                             enableFastScroller = prefs.enableFastScroller,
+                            fastScrollerAlignment = prefs.fastScrollerAlignment,
                             backOpensAppDrawer = prefs.backOpensAppDrawer
                         )
                     }
@@ -454,6 +456,12 @@ class CustomisationViewModel @Inject constructor(
     fun onToggleFastScroller() {
         viewModelScope.launch {
             preferenceHelper.setEnableFastScroller(_state.value.enableFastScroller.not())
+        }
+    }
+
+    fun onFastScrollerAlignmentChanged(alignment: FastScrollerAlignment) {
+        viewModelScope.launch {
+            preferenceHelper.setFastScrollerAlignment(alignment)
         }
     }
 

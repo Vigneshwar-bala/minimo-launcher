@@ -147,6 +147,7 @@
     <string name="none">Ninguna</string>
     <string name="font">Fuente</string>
     <string name="fast_scroller">Desplazamiento rápido</string>
+    <string name="fast_scroller_alignment">Alineación del desplazamiento rápido</string>
     <string name="fast_scroller_description">Mostrar una barra de desplazamiento rápido A-Z en el cajón de apps</string>
     <string name="back_opens_drawer">Atrás abre el cajón de apps</string>
     <string name="back_opens_drawer_description">Pulsa Atrás en la pantalla de inicio para abrir el cajón de apps</string>

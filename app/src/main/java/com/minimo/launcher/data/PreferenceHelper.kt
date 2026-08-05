@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -98,6 +99,8 @@ class PreferenceHelper @Inject constructor(
             stringPreferencesKey("KEY_MINIMO_SETTINGS_POSITION")
         private val KEY_KEYBOARD_OPEN_DELAY = longPreferencesKey("KEY_KEYBOARD_OPEN_DELAY")
         private val KEY_ENABLE_FAST_SCROLLER = booleanPreferencesKey("KEY_ENABLE_FAST_SCROLLER")
+        private val KEY_FAST_SCROLLER_ALIGNMENT =
+            stringPreferencesKey("KEY_FAST_SCROLLER_ALIGNMENT")
         private val KEY_BACK_OPENS_APP_DRAWER = booleanPreferencesKey("KEY_BACK_OPENS_APP_DRAWER")
         private val KEY_SCREEN_ORIENTATION = stringPreferencesKey("KEY_SCREEN_ORIENTATION")
     }
@@ -396,6 +399,12 @@ class PreferenceHelper @Inject constructor(
         }
     }
 
+    suspend fun setFastScrollerAlignment(alignment: FastScrollerAlignment) {
+        preferences.edit {
+            it[KEY_FAST_SCROLLER_ALIGNMENT] = alignment.name
+        }
+    }
+
     suspend fun setBackOpensAppDrawer(enable: Boolean) {
         preferences.edit {
             it[KEY_BACK_OPENS_APP_DRAWER] = enable
@@ -474,6 +483,9 @@ class PreferenceHelper @Inject constructor(
                 keyboardOpenDelay = prefs[KEY_KEYBOARD_OPEN_DELAY]
                     ?: Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
                 enableFastScroller = prefs[KEY_ENABLE_FAST_SCROLLER] ?: false,
+                fastScrollerAlignment = getFastScrollerAlignmentFromPref(
+                    prefs[KEY_FAST_SCROLLER_ALIGNMENT]
+                ),
                 backOpensAppDrawer = prefs[KEY_BACK_OPENS_APP_DRAWER] ?: true
             )
         }
@@ -536,6 +548,9 @@ class PreferenceHelper @Inject constructor(
                 keyboardOpenDelay = prefs[KEY_KEYBOARD_OPEN_DELAY]
                     ?: Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
                 enableFastScroller = prefs[KEY_ENABLE_FAST_SCROLLER] ?: false,
+                fastScrollerAlignment = getFastScrollerAlignmentFromPref(
+                    prefs[KEY_FAST_SCROLLER_ALIGNMENT]
+                ),
                 backOpensAppDrawer = prefs[KEY_BACK_OPENS_APP_DRAWER] ?: true
             )
         }
@@ -580,6 +595,11 @@ class PreferenceHelper @Inject constructor(
 
     private fun getAppIconAlignmentFromPref(alignment: String?): AppIconAlignment {
         return AppIconAlignment.entries.find { it.name == alignment } ?: AppIconAlignment.Left
+    }
+
+    private fun getFastScrollerAlignmentFromPref(alignment: String?): FastScrollerAlignment {
+        return FastScrollerAlignment.entries.find { it.name == alignment }
+            ?: FastScrollerAlignment.Right
     }
 
     private fun getHomeAppsAlignmentVerticalFromPref(alignment: String?): HomeAppsAlignmentVertical {

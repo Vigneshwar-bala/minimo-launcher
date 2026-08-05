@@ -6,6 +6,7 @@ import com.minimo.launcher.ui.entities.AppInfo
 import com.minimo.launcher.ui.entities.ShortcutInfo
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeClockMode
 import com.minimo.launcher.utils.MinimoSettingsPosition
 
@@ -61,5 +62,6 @@ data class HomeScreenState(
     val minimoSettingsPosition: MinimoSettingsPosition = MinimoSettingsPosition.Auto,
     val keyboardOpenDelay: Long = Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
     val enableFastScroller: Boolean = false,
+    val fastScrollerAlignment: FastScrollerAlignment = FastScrollerAlignment.Right,
     val backOpensAppDrawer: Boolean = true
 )

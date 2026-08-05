@@ -71,6 +71,7 @@ import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.ui.home.components.MinimoSettingsItem
 import com.minimo.launcher.ui.home.components.appIconSizeFor
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.launchAppInfo
 import com.minimo.launcher.utils.uninstallApp
 import kotlinx.coroutines.delay
@@ -230,9 +231,22 @@ fun AppDrawerScreen(
 
     val showFastScroller =
         state.enableFastScroller && state.searchText.isBlank() && state.filteredAllApps.isNotEmpty()
-    val endContentPadding = if (state.enableFastScroller) 40.dp else 0.dp
-    val startContentPadding =
-        if (state.drawerAppsArrangementHorizontal == Arrangement.Start) 0.dp else endContentPadding
+    val fastScrollerContentPadding = if (state.enableFastScroller) 40.dp else 0.dp
+    val fastScrollerAtStart = state.fastScrollerAlignment == FastScrollerAlignment.Left
+    val startContentPadding = if (
+        !fastScrollerAtStart && state.drawerAppsArrangementHorizontal == Arrangement.Start
+    ) {
+        0.dp
+    } else {
+        fastScrollerContentPadding
+    }
+    val endContentPadding = if (
+        fastScrollerAtStart && state.drawerAppsArrangementHorizontal == Arrangement.End
+    ) {
+        0.dp
+    } else {
+        fastScrollerContentPadding
+    }
 
     Scaffold(
         modifier = Modifier
@@ -377,7 +391,14 @@ fun AppDrawerScreen(
                         AppDrawerFastScroller(
                             apps = state.filteredAllApps,
                             listState = allAppsLazyListState,
-                            modifier = Modifier.align(Alignment.CenterEnd),
+                            modifier = Modifier.align(
+                                if (fastScrollerAtStart) {
+                                    Alignment.CenterStart
+                                } else {
+                                    Alignment.CenterEnd
+                                }
+                            ),
+                            isAtStart = fastScrollerAtStart,
                             onInteractionStart = ::hideKeyboardWithClearFocus,
                             textColor = textColor,
                             textShadow = textShadow,

@@ -149,6 +149,7 @@
     <string name="none">Keine</string>
     <string name="font">Schriftart</string>
     <string name="fast_scroller">Schnellscroller</string>
+    <string name="fast_scroller_alignment">Schnellscroller-Ausrichtung</string>
     <string name="fast_scroller_description">Zeige einen A-Z-Schnellscroller in der App-Schublade</string>
     <string name="back_opens_drawer">Zurück öffnet App-Schublade</string>
     <string name="back_opens_drawer_description">Auf dem Startbildschirm Zurück drücken, um die App-Schublade zu öffnen</string>
