@@ -20,6 +20,9 @@ data class MainPreferences(
     val blackTheme: Boolean = false,
     val setWallpaperToThemeColor: Boolean = false,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
+    val dimWallpaper: Boolean = false,
+    val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
     val lightTextOnWallpaper: Boolean = true
 )
 
@@ -49,10 +52,9 @@ data class HomePreferences(
     val hideAppDrawerSearch: Boolean = false,
     val minimoSettingsPosition: MinimoSettingsPosition = MinimoSettingsPosition.Auto,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val showScreenTimeWidget: Boolean = false,
     val lightTextOnWallpaper: Boolean = true,
-    val dimWallpaper: Boolean = false,
-    val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
     val clockAppPreference: String = "",
     val batteryAppPreference: String = "",
     val calendarAppPreference: String = "",
@@ -93,6 +95,7 @@ data class CustomisationPreferences(
     val blackTheme: Boolean = false,
     val setWallpaperToThemeColor: Boolean = false,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val lightTextOnWallpaper: Boolean = true,
     val dimWallpaper: Boolean = false,
     val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,

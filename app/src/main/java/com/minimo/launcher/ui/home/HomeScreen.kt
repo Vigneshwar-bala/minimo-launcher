@@ -2,7 +2,6 @@ package com.minimo.launcher.ui.home
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -147,35 +146,9 @@ fun HomeScreen(
             useDarkIconsOnSurface = useDarkIconsOnSurface
         )
 
-    val boxBackgroundColor = remember(
-        enableWallpaper,
-        state.dimWallpaper,
-        state.dimWallpaperPercentage,
-        surfaceColor
-    ) {
-        if (enableWallpaper) {
-            if (state.dimWallpaper) {
-                Color.Black.copy(alpha = state.dimWallpaperPercentage / 100f)
-            } else {
-                Color.Transparent
-            }
-        } else {
-            surfaceColor
-        }
-    }
-
-    val scaffoldContainerColor = remember(enableWallpaper, surfaceColor) {
-        if (enableWallpaper) {
-            Color.Transparent
-        } else {
-            surfaceColor
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(boxBackgroundColor)
             .windowInsetsPadding(safeDrawingTop)
             .pointerInput(state.doubleTapToLock) {
                 detectTapGestures(onDoubleTap = {
@@ -202,7 +175,7 @@ fun HomeScreen(
             }
     ) {
         Scaffold(
-            containerColor = scaffoldContainerColor,
+            containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
         ) { paddingValues ->
             if (state.initialLoaded) {

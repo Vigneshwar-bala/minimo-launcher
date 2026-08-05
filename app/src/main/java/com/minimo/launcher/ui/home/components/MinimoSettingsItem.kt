@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -46,6 +48,8 @@ fun MinimoSettingsItem(
     showAppIcon: Boolean = false,
     appIconSizeScale: Float = Constants.DEFAULT_APP_ICON_SIZE_PERCENT / 100f,
     appIconAlignment: AppIconAlignment = AppIconAlignment.Left,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textShadow: Shadow? = null
 ) {
     val lineHeight by remember { derivedStateOf { textSize * 1.2 } }
 
@@ -74,11 +78,12 @@ fun MinimoSettingsItem(
             } else {
                 Modifier
             },
-            color = MaterialTheme.colorScheme.onSurface,
+            color = textColor,
             fontSize = textSize,
             lineHeight = lineHeight,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            style = LocalTextStyle.current.copy(shadow = textShadow)
         )
 
         if (showAppIcon && appIconAlignment == AppIconAlignment.Right) {

@@ -255,7 +255,13 @@ fun CustomisationScreen(
                 onToggleClick = viewModel::onToggleEnableWallpaper
             )
 
-            if (state.enableWallpaper) {
+            ToggleItem(
+                title = stringResource(R.string.enable_wallpaper_on_drawer),
+                isChecked = state.enableWallpaperOnDrawer,
+                onToggleClick = viewModel::onToggleEnableWallpaperOnDrawer
+            )
+
+            if (state.enableWallpaper || state.enableWallpaperOnDrawer) {
                 ToggleItem(
                     title = stringResource(R.string.light_text_on_wallpaper),
                     isChecked = state.lightTextOnWallpaper,

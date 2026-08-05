@@ -31,6 +31,8 @@ class PreferenceHelper @Inject constructor(
         private val KEY_SET_WALLPAPER_TO_THEME_COLOR =
             booleanPreferencesKey("KEY_SET_WALLPAPER_TO_THEME_COLOR")
         private val KEY_ENABLE_WALLPAPER = booleanPreferencesKey("KEY_ENABLE_WALLPAPER")
+        private val KEY_ENABLE_WALLPAPER_ON_DRAWER =
+            booleanPreferencesKey("KEY_ENABLE_WALLPAPER_ON_DRAWER")
         private val KEY_LIGHT_TEXT_ON_WALLPAPER =
             booleanPreferencesKey("KEY_LIGHT_TEXT_ON_WALLPAPER")
         private val KEY_DIM_WALLPAPER = booleanPreferencesKey("KEY_DIM_WALLPAPER")
@@ -270,6 +272,12 @@ class PreferenceHelper @Inject constructor(
         }
     }
 
+    suspend fun setEnableWallpaperOnDrawer(enable: Boolean) {
+        preferences.edit {
+            it[KEY_ENABLE_WALLPAPER_ON_DRAWER] = enable
+        }
+    }
+
     suspend fun setLightTextOnWallpaper(enable: Boolean) {
         preferences.edit {
             it[KEY_LIGHT_TEXT_ON_WALLPAPER] = enable
@@ -412,6 +420,10 @@ class PreferenceHelper @Inject constructor(
                 blackTheme = getBlackThemeFromPref(prefs[KEY_BLACK_THEME], prefs[KEY_THEME_MODE]),
                 setWallpaperToThemeColor = prefs[KEY_SET_WALLPAPER_TO_THEME_COLOR] ?: false,
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
+                dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
+                dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]
+                    ?: Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true
             )
         }
@@ -450,11 +462,9 @@ class PreferenceHelper @Inject constructor(
                 hideAppDrawerSearch = prefs[KEY_HIDE_APP_DRAWER_SEARCH] ?: false,
                 minimoSettingsPosition = getMinimoSettingsPositionFromPref(prefs[KEY_MINIMO_SETTINGS_POSITION]),
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
                 showScreenTimeWidget = prefs[KEY_SHOW_SCREEN_TIME_WIDGET] ?: false,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true,
-                dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
-                dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]
-                    ?: Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
                 clockAppPreference = prefs[KEY_CLOCK_APP_PREFERENCE] ?: "",
                 batteryAppPreference = prefs[KEY_BATTERY_APP_PREFERENCE] ?: "",
                 calendarAppPreference = prefs[KEY_CALENDAR_APP_PREFERENCE] ?: "",
@@ -505,6 +515,7 @@ class PreferenceHelper @Inject constructor(
                 blackTheme = getBlackThemeFromPref(prefs[KEY_BLACK_THEME], prefs[KEY_THEME_MODE]),
                 setWallpaperToThemeColor = prefs[KEY_SET_WALLPAPER_TO_THEME_COLOR] ?: false,
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true,
                 dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
                 dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]

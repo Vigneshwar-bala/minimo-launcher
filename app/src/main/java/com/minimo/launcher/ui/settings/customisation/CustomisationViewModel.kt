@@ -63,6 +63,7 @@ class CustomisationViewModel @Inject constructor(
                             blackTheme = prefs.blackTheme,
                             setWallpaperToThemeColor = prefs.setWallpaperToThemeColor,
                             enableWallpaper = prefs.enableWallpaper,
+                            enableWallpaperOnDrawer = prefs.enableWallpaperOnDrawer,
                             lightTextOnWallpaper = prefs.lightTextOnWallpaper,
                             dimWallpaper = prefs.dimWallpaper,
                             dimWallpaperPercentage = prefs.dimWallpaperPercentage.toFloat(),
@@ -258,6 +259,14 @@ class CustomisationViewModel @Inject constructor(
     fun onToggleEnableWallpaper() {
         viewModelScope.launch {
             preferenceHelper.setEnableWallpaper(_state.value.enableWallpaper.not())
+        }
+    }
+
+    fun onToggleEnableWallpaperOnDrawer() {
+        viewModelScope.launch {
+            preferenceHelper.setEnableWallpaperOnDrawer(
+                _state.value.enableWallpaperOnDrawer.not()
+            )
         }
     }
 

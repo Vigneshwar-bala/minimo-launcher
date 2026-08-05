@@ -36,6 +36,9 @@ class MainViewModel @Inject constructor(
                             blackTheme = prefs.blackTheme,
                             setWallpaperToThemeColor = prefs.setWallpaperToThemeColor,
                             enableWallpaper = prefs.enableWallpaper,
+                            enableWallpaperOnDrawer = prefs.enableWallpaperOnDrawer,
+                            dimWallpaper = prefs.dimWallpaper,
+                            dimWallpaperPercentage = prefs.dimWallpaperPercentage,
                             lightTextOnWallpaper = prefs.lightTextOnWallpaper
                         )
                     }

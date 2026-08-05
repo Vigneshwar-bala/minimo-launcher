@@ -2,6 +2,8 @@ package com.minimo.launcher.ui.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -25,6 +27,10 @@ import com.minimo.launcher.ui.settings.SupporterScreen
 import com.minimo.launcher.ui.settings.about.AboutAppScreen
 import com.minimo.launcher.ui.settings.customisation.CustomisationScreen
 import com.minimo.launcher.ui.settings.web_shortcuts.WebShortcutsScreen
+
+private const val DRAWER_TRANSITION_DURATION_MILLIS = 400
+private const val OUTGOING_SCREEN_FADE_DURATION_MILLIS = 200
+private const val INCOMING_SCREEN_FADE_DELAY_MILLIS = 200
 
 object Routes {
     const val LAUNCH = "LAUNCH"
@@ -82,7 +88,45 @@ fun AppNavGraph(
                 }
             )
         }
-        composable(route = Routes.HOME) {
+        composable(
+            route = Routes.HOME,
+            exitTransition = {
+                if (targetState.destination.route == Routes.APP_DRAWER) {
+                    fadeOut(
+                        animationSpec = tween(
+                            durationMillis = OUTGOING_SCREEN_FADE_DURATION_MILLIS
+                        )
+                    ) +
+                            slideOutVertically(
+                                animationSpec = tween(
+                                    durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                                ),
+                                targetOffsetY = { -it / 8 }
+                            )
+                } else {
+                    ExitTransition.None
+                }
+            },
+            popEnterTransition = {
+                if (initialState.destination.route == Routes.APP_DRAWER) {
+                    fadeIn(
+                        animationSpec = keyframes {
+                            durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                            // Keep Home invisible until Drawer is fully faded out.
+                            0f at INCOMING_SCREEN_FADE_DELAY_MILLIS using FastOutSlowInEasing
+                        }
+                    ) +
+                            slideInVertically(
+                                animationSpec = tween(
+                                    durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                                ),
+                                initialOffsetY = { -it / 8 }
+                            )
+                } else {
+                    EnterTransition.None
+                }
+            }
+        ) {
             HomeScreen(
                 viewModel = homeViewModel,
                 enableWallpaper = enableWallpaper,
@@ -98,18 +142,32 @@ fun AppNavGraph(
         composable(
             route = Routes.APP_DRAWER,
             enterTransition = {
-                fadeIn(animationSpec = tween(durationMillis = 180)) +
+                fadeIn(
+                    animationSpec = keyframes {
+                        durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                        // Keep Drawer invisible until Home is fully faded out.
+                        0f at INCOMING_SCREEN_FADE_DELAY_MILLIS using FastOutSlowInEasing
+                    }
+                ) +
                         slideInVertically(
-                            animationSpec = tween(durationMillis = 180),
+                            animationSpec = tween(
+                                durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                            ),
                             initialOffsetY = { it / 8 }
                         )
             },
             exitTransition = { ExitTransition.None },
             popEnterTransition = { EnterTransition.None },
             popExitTransition = {
-                fadeOut(animationSpec = tween(durationMillis = 160)) +
+                fadeOut(
+                    animationSpec = tween(
+                        durationMillis = OUTGOING_SCREEN_FADE_DURATION_MILLIS
+                    )
+                ) +
                         slideOutVertically(
-                            animationSpec = tween(durationMillis = 160),
+                            animationSpec = tween(
+                                durationMillis = DRAWER_TRANSITION_DURATION_MILLIS
+                            ),
                             targetOffsetY = { it / 8 }
                         )
             }
