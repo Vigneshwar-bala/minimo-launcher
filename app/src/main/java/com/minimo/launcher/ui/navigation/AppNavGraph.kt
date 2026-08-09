@@ -28,9 +28,9 @@ import com.minimo.launcher.ui.settings.about.AboutAppScreen
 import com.minimo.launcher.ui.settings.customisation.CustomisationScreen
 import com.minimo.launcher.ui.settings.web_shortcuts.WebShortcutsScreen
 
-private const val DRAWER_TRANSITION_DURATION_MILLIS = 400
-private const val OUTGOING_SCREEN_FADE_DURATION_MILLIS = 200
-private const val INCOMING_SCREEN_FADE_DELAY_MILLIS = 200
+private const val DRAWER_TRANSITION_DURATION_MILLIS = 300
+private const val OUTGOING_SCREEN_FADE_DURATION_MILLIS = 50
+private const val INCOMING_SCREEN_FADE_DELAY_MILLIS = 50
 
 object Routes {
     const val LAUNCH = "LAUNCH"
