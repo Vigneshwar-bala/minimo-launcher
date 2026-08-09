@@ -113,9 +113,12 @@ fun AppTheme(
 
             val insetsController = WindowCompat.getInsetsController(window, view)
 
-            if (enableWallpaper && isHomeScreen) {
+            if (enableWallpaper) {
                 insetsController.isAppearanceLightStatusBars = !lightTextOnWallpaper
-                // HomeScreen owns navigation icons because the app drawer can cover the nav area.
+                if (!isHomeScreen) {
+                    insetsController.isAppearanceLightNavigationBars = !lightTextOnWallpaper
+                }
+                // HomeScreen owns its navigation icons because the app drawer can cover that area.
             } else {
                 insetsController.isAppearanceLightStatusBars = isLightTheme
                 insetsController.isAppearanceLightNavigationBars = isLightTheme

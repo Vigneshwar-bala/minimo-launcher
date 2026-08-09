@@ -6,6 +6,7 @@ import com.minimo.launcher.data.AppInfoDao
 import com.minimo.launcher.data.PreferenceHelper
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -63,6 +64,7 @@ class CustomisationViewModel @Inject constructor(
                             blackTheme = prefs.blackTheme,
                             setWallpaperToThemeColor = prefs.setWallpaperToThemeColor,
                             enableWallpaper = prefs.enableWallpaper,
+                            enableWallpaperOnDrawer = prefs.enableWallpaperOnDrawer,
                             lightTextOnWallpaper = prefs.lightTextOnWallpaper,
                             dimWallpaper = prefs.dimWallpaper,
                             dimWallpaperPercentage = prefs.dimWallpaperPercentage.toFloat(),
@@ -81,6 +83,7 @@ class CustomisationViewModel @Inject constructor(
                             swipeRightAppPreference = prefs.swipeRightAppPreference,
                             keyboardOpenDelay = prefs.keyboardOpenDelay,
                             enableFastScroller = prefs.enableFastScroller,
+                            fastScrollerAlignment = prefs.fastScrollerAlignment,
                             backOpensAppDrawer = prefs.backOpensAppDrawer
                         )
                     }
@@ -261,6 +264,14 @@ class CustomisationViewModel @Inject constructor(
         }
     }
 
+    fun onToggleEnableWallpaperOnDrawer() {
+        viewModelScope.launch {
+            preferenceHelper.setEnableWallpaperOnDrawer(
+                _state.value.enableWallpaperOnDrawer.not()
+            )
+        }
+    }
+
     fun onToggleLightTextOnWallpaper() {
         viewModelScope.launch {
             preferenceHelper.setLightTextOnWallpaper(_state.value.lightTextOnWallpaper.not())
@@ -372,8 +383,7 @@ class CustomisationViewModel @Inject constructor(
 
     fun onUpdateIgnoreSpecialCharacters(characters: String) {
         viewModelScope.launch {
-            val uniqueCharacters = characters.trim().toSet().joinToString("")
-            preferenceHelper.setIgnoreSpecialCharacters(uniqueCharacters)
+            preferenceHelper.setIgnoreSpecialCharacters(characters)
         }
     }
 
@@ -446,6 +456,12 @@ class CustomisationViewModel @Inject constructor(
     fun onToggleFastScroller() {
         viewModelScope.launch {
             preferenceHelper.setEnableFastScroller(_state.value.enableFastScroller.not())
+        }
+    }
+
+    fun onFastScrollerAlignmentChanged(alignment: FastScrollerAlignment) {
+        viewModelScope.launch {
+            preferenceHelper.setFastScrollerAlignment(alignment)
         }
     }
 

@@ -11,6 +11,7 @@
 
     <string name="favourite_apps">Favorite Apps</string>
     <string name="hidden_apps">Hidden Apps</string>
+    <string name="hidden_apps_long_press_hint">Long-press an app to launch it.</string>
     <string name="customisation">Customization</string>
     <string name="set_default_launcher">Set Default Launcher</string>
     <string name="send_feedback">Send Feedback</string>
@@ -44,6 +45,16 @@
     <string name="unhide_app">Unhide App</string>
     <string name="app_info">App Info</string>
     <string name="uninstall">Uninstall</string>
+    <string name="launch_delay">Launch Delay</string>
+    <string name="launch_delay_description">Wait before opening this app.\nUse 0 for no delay.</string>
+    <string name="seconds">Seconds</string>
+    <string name="save">Save</string>
+    <plurals name="launch_delay_remaining">
+        <item quantity="one">%1$d second remaining</item>
+        <item quantity="other">%1$d seconds remaining</item>
+    </plurals>
+    <string name="ready_to_launch">Ready to launch</string>
+    <string name="launch">Launch</string>
     <string name="show_status_bar">Show Status Bar</string>
     <string name="show_navigation_bar">Show Navigation Bar</string>
     <string name="show_keyboard">Show Keyboard</string>
@@ -120,7 +131,8 @@
     <string name="bottom">Bottom</string>
     <string name="home_apps_alignment_vertical">Home Apps Alignment Vertical</string>
     <string name="drawer_apps_alignment_horizontal">Drawer Apps Alignment Horizontal</string>
-    <string name="enable_wallpaper">Enable Wallpaper</string>
+    <string name="enable_wallpaper">Enable Wallpaper on Home</string>
+    <string name="enable_wallpaper_on_drawer">Enable Wallpaper on Drawer</string>
     <string name="dim_wallpaper">Dim Wallpaper</string>
     <string name="dim_percentage">Dim Percentage:</string>
     <string name="light_text_on_wallpaper">Light Text on Wallpaper</string>
@@ -137,6 +149,7 @@
     <string name="none">None</string>
     <string name="font">Font</string>
     <string name="fast_scroller">Fast Scroller</string>
+    <string name="fast_scroller_alignment">Fast Scroller Alignment</string>
     <string name="fast_scroller_description">Show an A-Z fast scroller on the app drawer</string>
     <string name="back_opens_drawer">Back Opens Drawer</string>
     <string name="back_opens_drawer_description">Press Back on home screen to open the app drawer</string>

@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -46,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
@@ -72,6 +71,7 @@ import com.minimo.launcher.ui.settings.customisation.components.EnableAccessibil
 import com.minimo.launcher.ui.settings.customisation.components.EnableAppUsageDialog
 import com.minimo.launcher.ui.settings.customisation.components.EnableNotificationsDialog
 import com.minimo.launcher.ui.settings.customisation.components.EnableSetWallpaperToThemeColorDialog
+import com.minimo.launcher.ui.settings.customisation.components.FastScrollerAlignmentDropdown
 import com.minimo.launcher.ui.settings.customisation.components.FontDropdown
 import com.minimo.launcher.ui.settings.customisation.components.IgnoreSpecialCharacters
 import com.minimo.launcher.ui.settings.customisation.components.MinimoSettingsPositionDropdown
@@ -84,6 +84,7 @@ import com.minimo.launcher.utils.AndroidUtils
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
 import com.minimo.launcher.utils.Constants.KEYBOARD_OPEN_DELAY_RANGE
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -168,7 +169,7 @@ fun CustomisationScreen(
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
+                        painter = painterResource(R.drawable.ic_arrow_back),
                         contentDescription = "Back",
                         modifier = Modifier.size(24.dp)
                     )
@@ -256,7 +257,13 @@ fun CustomisationScreen(
                 onToggleClick = viewModel::onToggleEnableWallpaper
             )
 
-            if (state.enableWallpaper) {
+            ToggleItem(
+                title = stringResource(R.string.enable_wallpaper_on_drawer),
+                isChecked = state.enableWallpaperOnDrawer,
+                onToggleClick = viewModel::onToggleEnableWallpaperOnDrawer
+            )
+
+            if (state.enableWallpaper || state.enableWallpaperOnDrawer) {
                 ToggleItem(
                     title = stringResource(R.string.light_text_on_wallpaper),
                     isChecked = state.lightTextOnWallpaper,
@@ -349,12 +356,14 @@ fun CustomisationScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            if (state.showAppIconInHome || state.showAppIconInDrawer) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-            AppIconSizeSlider(
-                appIconSizePercent = state.appIconSizePercent,
-                onAppIconSizePercentChanged = viewModel::onAppIconSizePercentChanged
-            )
+                AppIconSizeSlider(
+                    appIconSizePercent = state.appIconSizePercent,
+                    onAppIconSizePercentChanged = viewModel::onAppIconSizePercentChanged
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -763,6 +772,26 @@ fun CustomisationScreen(
                 isChecked = state.enableFastScroller,
                 onToggleClick = viewModel::onToggleFastScroller
             )
+
+            if (state.enableFastScroller) {
+                FastScrollerAlignmentDropdown(
+                    selectedOption = StringUtils.fastScrollerAlignmentText(
+                        context,
+                        state.fastScrollerAlignment
+                    ),
+                    options = listOf(
+                        FastScrollerAlignment.Left to StringUtils.fastScrollerAlignmentText(
+                            context,
+                            FastScrollerAlignment.Left
+                        ),
+                        FastScrollerAlignment.Right to StringUtils.fastScrollerAlignmentText(
+                            context,
+                            FastScrollerAlignment.Right
+                        )
+                    ),
+                    onOptionSelected = viewModel::onFastScrollerAlignmentChanged
+                )
+            }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 

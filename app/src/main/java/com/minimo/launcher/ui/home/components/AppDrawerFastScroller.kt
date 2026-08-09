@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -55,7 +56,12 @@ fun AppDrawerFastScroller(
     apps: List<AppInfo>,
     listState: LazyListState,
     modifier: Modifier = Modifier,
-    onInteractionStart: () -> Unit = {}
+    isAtStart: Boolean = false,
+    onInteractionStart: () -> Unit = {},
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
+    textShadow: Shadow? = null,
+    indicatorColor: Color = MaterialTheme.colorScheme.onSurface,
+    indicatorTextColor: Color = MaterialTheme.colorScheme.surface
 ) {
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
@@ -237,9 +243,10 @@ fun AppDrawerFastScroller(
                         text = letter,
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                            shadow = textShadow
                         ),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = textColor,
                         modifier = Modifier.graphicsLayer(
                             scaleX = scale,
                             scaleY = scale,
@@ -253,7 +260,10 @@ fun AppDrawerFastScroller(
         if (isInteracting && currentSelectedLetter.isNotEmpty()) {
             FloatingLetterIndicator(
                 letter = currentSelectedLetter,
-                yPosition = currentDragPosition
+                yPosition = currentDragPosition,
+                isAtStart = isAtStart,
+                indicatorColor = indicatorColor,
+                indicatorTextColor = indicatorTextColor
             )
         }
     }
@@ -263,10 +273,14 @@ fun AppDrawerFastScroller(
 private fun FloatingLetterIndicator(
     letter: String,
     yPosition: Float,
+    isAtStart: Boolean,
+    indicatorColor: Color,
+    indicatorTextColor: Color,
     modifier: Modifier = Modifier
 ) {
     val density = LocalDensity.current
     val indicatorSize = 80.dp
+    val horizontalOffset = if (isAtStart) 60.dp else (-60).dp
 
     Surface(
         modifier = modifier
@@ -274,18 +288,18 @@ private fun FloatingLetterIndicator(
             .aspectRatio(1f)
             .offset {
                 IntOffset(
-                    x = with(density) { (-60).dp.roundToPx() },
+                    x = with(density) { horizontalOffset.roundToPx() },
                     y = (yPosition - with(density) { (indicatorSize / 2).toPx() }).toInt()
                 )
             },
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.onSurface
+        color = indicatorColor
     ) {
         Text(
             text = letter,
             style = MaterialTheme.typography.headlineSmall.copy(
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.surface,
+                color = indicatorTextColor,
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
                     trim = LineHeightStyle.Trim.Both

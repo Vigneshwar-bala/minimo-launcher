@@ -1,6 +1,6 @@
 package com.minimo.launcher.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +27,8 @@ fun ToggleAppItem(
     appName: String,
     isChecked: Boolean,
     isWorkProfile: Boolean,
-    onToggleClick: () -> Unit
+    onToggleClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null
 ) {
     val paddingValues = remember(isWorkProfile) {
         if (isWorkProfile) {
@@ -44,7 +45,10 @@ fun ToggleAppItem(
 
     Row(
         modifier = modifier
-            .clickable(onClick = onToggleClick)
+            .combinedClickable(
+                onClick = onToggleClick,
+                onLongClick = onLongClick
+            )
             .padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically
     ) {

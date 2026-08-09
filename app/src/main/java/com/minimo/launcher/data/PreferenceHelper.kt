@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -31,6 +32,8 @@ class PreferenceHelper @Inject constructor(
         private val KEY_SET_WALLPAPER_TO_THEME_COLOR =
             booleanPreferencesKey("KEY_SET_WALLPAPER_TO_THEME_COLOR")
         private val KEY_ENABLE_WALLPAPER = booleanPreferencesKey("KEY_ENABLE_WALLPAPER")
+        private val KEY_ENABLE_WALLPAPER_ON_DRAWER =
+            booleanPreferencesKey("KEY_ENABLE_WALLPAPER_ON_DRAWER")
         private val KEY_LIGHT_TEXT_ON_WALLPAPER =
             booleanPreferencesKey("KEY_LIGHT_TEXT_ON_WALLPAPER")
         private val KEY_DIM_WALLPAPER = booleanPreferencesKey("KEY_DIM_WALLPAPER")
@@ -96,6 +99,8 @@ class PreferenceHelper @Inject constructor(
             stringPreferencesKey("KEY_MINIMO_SETTINGS_POSITION")
         private val KEY_KEYBOARD_OPEN_DELAY = longPreferencesKey("KEY_KEYBOARD_OPEN_DELAY")
         private val KEY_ENABLE_FAST_SCROLLER = booleanPreferencesKey("KEY_ENABLE_FAST_SCROLLER")
+        private val KEY_FAST_SCROLLER_ALIGNMENT =
+            stringPreferencesKey("KEY_FAST_SCROLLER_ALIGNMENT")
         private val KEY_BACK_OPENS_APP_DRAWER = booleanPreferencesKey("KEY_BACK_OPENS_APP_DRAWER")
         private val KEY_SCREEN_ORIENTATION = stringPreferencesKey("KEY_SCREEN_ORIENTATION")
     }
@@ -270,6 +275,12 @@ class PreferenceHelper @Inject constructor(
         }
     }
 
+    suspend fun setEnableWallpaperOnDrawer(enable: Boolean) {
+        preferences.edit {
+            it[KEY_ENABLE_WALLPAPER_ON_DRAWER] = enable
+        }
+    }
+
     suspend fun setLightTextOnWallpaper(enable: Boolean) {
         preferences.edit {
             it[KEY_LIGHT_TEXT_ON_WALLPAPER] = enable
@@ -388,6 +399,12 @@ class PreferenceHelper @Inject constructor(
         }
     }
 
+    suspend fun setFastScrollerAlignment(alignment: FastScrollerAlignment) {
+        preferences.edit {
+            it[KEY_FAST_SCROLLER_ALIGNMENT] = alignment.name
+        }
+    }
+
     suspend fun setBackOpensAppDrawer(enable: Boolean) {
         preferences.edit {
             it[KEY_BACK_OPENS_APP_DRAWER] = enable
@@ -412,6 +429,10 @@ class PreferenceHelper @Inject constructor(
                 blackTheme = getBlackThemeFromPref(prefs[KEY_BLACK_THEME], prefs[KEY_THEME_MODE]),
                 setWallpaperToThemeColor = prefs[KEY_SET_WALLPAPER_TO_THEME_COLOR] ?: false,
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
+                dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
+                dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]
+                    ?: Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true
             )
         }
@@ -450,11 +471,9 @@ class PreferenceHelper @Inject constructor(
                 hideAppDrawerSearch = prefs[KEY_HIDE_APP_DRAWER_SEARCH] ?: false,
                 minimoSettingsPosition = getMinimoSettingsPositionFromPref(prefs[KEY_MINIMO_SETTINGS_POSITION]),
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
                 showScreenTimeWidget = prefs[KEY_SHOW_SCREEN_TIME_WIDGET] ?: false,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true,
-                dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
-                dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]
-                    ?: Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
                 clockAppPreference = prefs[KEY_CLOCK_APP_PREFERENCE] ?: "",
                 batteryAppPreference = prefs[KEY_BATTERY_APP_PREFERENCE] ?: "",
                 calendarAppPreference = prefs[KEY_CALENDAR_APP_PREFERENCE] ?: "",
@@ -464,6 +483,9 @@ class PreferenceHelper @Inject constructor(
                 keyboardOpenDelay = prefs[KEY_KEYBOARD_OPEN_DELAY]
                     ?: Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
                 enableFastScroller = prefs[KEY_ENABLE_FAST_SCROLLER] ?: false,
+                fastScrollerAlignment = getFastScrollerAlignmentFromPref(
+                    prefs[KEY_FAST_SCROLLER_ALIGNMENT]
+                ),
                 backOpensAppDrawer = prefs[KEY_BACK_OPENS_APP_DRAWER] ?: true
             )
         }
@@ -505,6 +527,7 @@ class PreferenceHelper @Inject constructor(
                 blackTheme = getBlackThemeFromPref(prefs[KEY_BLACK_THEME], prefs[KEY_THEME_MODE]),
                 setWallpaperToThemeColor = prefs[KEY_SET_WALLPAPER_TO_THEME_COLOR] ?: false,
                 enableWallpaper = prefs[KEY_ENABLE_WALLPAPER] ?: false,
+                enableWallpaperOnDrawer = prefs[KEY_ENABLE_WALLPAPER_ON_DRAWER] ?: false,
                 lightTextOnWallpaper = prefs[KEY_LIGHT_TEXT_ON_WALLPAPER] ?: true,
                 dimWallpaper = prefs[KEY_DIM_WALLPAPER] ?: false,
                 dimWallpaperPercentage = prefs[KEY_DIM_WALLPAPER_PERCENTAGE]
@@ -525,6 +548,9 @@ class PreferenceHelper @Inject constructor(
                 keyboardOpenDelay = prefs[KEY_KEYBOARD_OPEN_DELAY]
                     ?: Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
                 enableFastScroller = prefs[KEY_ENABLE_FAST_SCROLLER] ?: false,
+                fastScrollerAlignment = getFastScrollerAlignmentFromPref(
+                    prefs[KEY_FAST_SCROLLER_ALIGNMENT]
+                ),
                 backOpensAppDrawer = prefs[KEY_BACK_OPENS_APP_DRAWER] ?: true
             )
         }
@@ -569,6 +595,11 @@ class PreferenceHelper @Inject constructor(
 
     private fun getAppIconAlignmentFromPref(alignment: String?): AppIconAlignment {
         return AppIconAlignment.entries.find { it.name == alignment } ?: AppIconAlignment.Left
+    }
+
+    private fun getFastScrollerAlignmentFromPref(alignment: String?): FastScrollerAlignment {
+        return FastScrollerAlignment.entries.find { it.name == alignment }
+            ?: FastScrollerAlignment.Right
     }
 
     private fun getHomeAppsAlignmentVerticalFromPref(alignment: String?): HomeAppsAlignmentVertical {

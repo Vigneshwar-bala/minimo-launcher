@@ -2,6 +2,7 @@ package com.minimo.launcher.ui.home
 
 import android.content.Context
 import android.os.Build
+import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.ViewModel
@@ -24,16 +25,14 @@ import com.minimo.launcher.utils.NotificationDotsNotifier
 import com.minimo.launcher.utils.ScreenTimeHelper
 import com.minimo.launcher.utils.ShortcutsUtils
 import com.minimo.launcher.utils.isAppUsagePermissionGranted
+import com.minimo.launcher.utils.launchApp
 import com.minimo.launcher.utils.updateNotificationDots
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -56,9 +55,6 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(HomeScreenState())
     val state: StateFlow<HomeScreenState> = _state
-
-    private val _launchApp = Channel<AppInfo>(Channel.BUFFERED)
-    val launchApp: Flow<AppInfo> = _launchApp.receiveAsFlow()
 
     private var lastScreenTimeUpdateTime = 0L
 
@@ -246,10 +242,9 @@ class HomeViewModel @Inject constructor(
                             hideAppDrawerSearch = prefs.hideAppDrawerSearch,
                             minimoSettingsPosition = prefs.minimoSettingsPosition,
                             enableWallpaper = prefs.enableWallpaper,
+                            enableWallpaperOnDrawer = prefs.enableWallpaperOnDrawer,
                             showScreenTimeWidget = prefs.showScreenTimeWidget,
                             lightTextOnWallpaper = prefs.lightTextOnWallpaper,
-                            dimWallpaper = prefs.dimWallpaper,
-                            dimWallpaperPercentage = prefs.dimWallpaperPercentage,
                             clockAppPreference = prefs.clockAppPreference,
                             batteryAppPreference = prefs.batteryAppPreference,
                             calendarAppPreference = prefs.calendarAppPreference,
@@ -258,6 +253,7 @@ class HomeViewModel @Inject constructor(
                             swipeRightAppPreference = prefs.swipeRightAppPreference,
                             keyboardOpenDelay = prefs.keyboardOpenDelay,
                             enableFastScroller = prefs.enableFastScroller,
+                            fastScrollerAlignment = prefs.fastScrollerAlignment,
                             backOpensAppDrawer = prefs.backOpensAppDrawer,
                             allApps = newAllApps,
                             filteredAllApps = newFilteredApps,
@@ -374,6 +370,78 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onLaunchDelayClick(app: AppInfo) {
+        _state.update {
+            it.copy(launchDelayDialog = app)
+        }
+    }
+
+    fun onUpdateLaunchDelay(delaySeconds: Int) {
+        val app = _state.value.launchDelayDialog ?: return
+        onDismissLaunchDelayDialog()
+        viewModelScope.launch {
+            appInfoDao.updateLaunchDelay(
+                className = app.className,
+                packageName = app.packageName,
+                userHandle = app.userHandle,
+                delaySeconds = delaySeconds
+            )
+        }
+    }
+
+    fun onDismissLaunchDelayDialog() {
+        _state.update {
+            it.copy(launchDelayDialog = null)
+        }
+    }
+
+    fun onAppLaunchRequest(app: AppInfo) {
+        if (app.launchDelaySeconds > 0) {
+            _state.update {
+                it.copy(
+                    launchConfirmDialog = PendingAppLaunch(
+                        app = app,
+                        deadlineElapsedRealtimeMillis = SystemClock.elapsedRealtime() +
+                                app.launchDelaySeconds.toLong() * 1_000L
+                    )
+                )
+            }
+        } else {
+            launchApp(app)
+        }
+    }
+
+    fun onPreferenceAppLaunchRequest(preference: String): Boolean {
+        val parts = preference.split("|")
+        if (parts.size != 3) return false
+
+        val userHandle = parts[2].toIntOrNull() ?: return false
+        val app = _state.value.allApps.find {
+            it.packageName == parts[0] &&
+                    it.className == parts[1] &&
+                    it.userHandle == userHandle
+        } ?: return false
+
+        onAppLaunchRequest(app)
+        return true
+    }
+
+    fun onConfirmAppLaunch() {
+        val app = _state.value.launchConfirmDialog?.app ?: return
+        onDismissAppLaunch()
+        launchApp(app)
+    }
+
+    fun onDismissAppLaunch() {
+        _state.update {
+            it.copy(launchConfirmDialog = null)
+        }
+    }
+
+    private fun launchApp(app: AppInfo) {
+        applicationContext.launchApp(app.packageName, app.className, app.userHandle)
+    }
+
     fun onSearchTextChange(searchText: String) {
         val filteredAllApps = getAppsWithSearch(
             searchText = searchText,
@@ -388,7 +456,7 @@ class HomeViewModel @Inject constructor(
             )
         }
         if (searchText.isNotBlank() && _state.value.autoOpenApp && filteredAllApps.size == 1) {
-            _launchApp.trySend(filteredAllApps[0])
+            onAppLaunchRequest(filteredAllApps[0])
         }
     }
 

@@ -6,8 +6,14 @@ import com.minimo.launcher.ui.entities.AppInfo
 import com.minimo.launcher.ui.entities.ShortcutInfo
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeClockMode
 import com.minimo.launcher.utils.MinimoSettingsPosition
+
+data class PendingAppLaunch(
+    val app: AppInfo,
+    val deadlineElapsedRealtimeMillis: Long
+)
 
 data class HomeScreenState(
     val initialLoaded: Boolean = false,
@@ -16,6 +22,8 @@ data class HomeScreenState(
     val allApps: List<AppInfo> = emptyList(),
     val filteredAllApps: List<AppInfo> = emptyList(),
     val renameAppDialog: AppInfo? = null,
+    val launchDelayDialog: AppInfo? = null,
+    val launchConfirmDialog: PendingAppLaunch? = null,
     val searchText: String = "",
     val appsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,
     val drawerAppsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,
@@ -43,9 +51,8 @@ data class HomeScreenState(
     val showScreenTimeWidget: Boolean = false,
     val screenTime: String = "",
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val lightTextOnWallpaper: Boolean = true,
-    val dimWallpaper: Boolean = false,
-    val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
     val clockAppPreference: String = "",
     val batteryAppPreference: String = "",
     val calendarAppPreference: String = "",
@@ -55,5 +62,6 @@ data class HomeScreenState(
     val minimoSettingsPosition: MinimoSettingsPosition = MinimoSettingsPosition.Auto,
     val keyboardOpenDelay: Long = Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
     val enableFastScroller: Boolean = false,
+    val fastScrollerAlignment: FastScrollerAlignment = FastScrollerAlignment.Right,
     val backOpensAppDrawer: Boolean = true
 )

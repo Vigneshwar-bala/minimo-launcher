@@ -3,6 +3,7 @@ package com.minimo.launcher.data
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -20,6 +21,9 @@ data class MainPreferences(
     val blackTheme: Boolean = false,
     val setWallpaperToThemeColor: Boolean = false,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
+    val dimWallpaper: Boolean = false,
+    val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
     val lightTextOnWallpaper: Boolean = true
 )
 
@@ -49,10 +53,9 @@ data class HomePreferences(
     val hideAppDrawerSearch: Boolean = false,
     val minimoSettingsPosition: MinimoSettingsPosition = MinimoSettingsPosition.Auto,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val showScreenTimeWidget: Boolean = false,
     val lightTextOnWallpaper: Boolean = true,
-    val dimWallpaper: Boolean = false,
-    val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
     val clockAppPreference: String = "",
     val batteryAppPreference: String = "",
     val calendarAppPreference: String = "",
@@ -61,6 +64,7 @@ data class HomePreferences(
     val swipeRightAppPreference: String = "",
     val keyboardOpenDelay: Long = Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
     val enableFastScroller: Boolean = false,
+    val fastScrollerAlignment: FastScrollerAlignment = FastScrollerAlignment.Right,
     val backOpensAppDrawer: Boolean = true
 )
 
@@ -93,6 +97,7 @@ data class CustomisationPreferences(
     val blackTheme: Boolean = false,
     val setWallpaperToThemeColor: Boolean = false,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val lightTextOnWallpaper: Boolean = true,
     val dimWallpaper: Boolean = false,
     val dimWallpaperPercentage: Int = Constants.DEFAULT_DIM_WALLPAPER_PERCENTAGE,
@@ -111,5 +116,6 @@ data class CustomisationPreferences(
     val swipeRightAppPreference: String = "",
     val keyboardOpenDelay: Long = Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
     val enableFastScroller: Boolean = false,
+    val fastScrollerAlignment: FastScrollerAlignment = FastScrollerAlignment.Right,
     val backOpensAppDrawer: Boolean = true
 )

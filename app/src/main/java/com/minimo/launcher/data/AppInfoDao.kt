@@ -87,6 +87,14 @@ interface AppInfoDao {
     @Query("UPDATE appInfoEntity SET alternate_app_name = :newName WHERE class_name = :className AND package_name = :packageName")
     suspend fun renameApp(className: String, packageName: String, newName: String)
 
+    @Query("UPDATE appInfoEntity SET launch_delay_seconds = :delaySeconds WHERE class_name = :className AND package_name = :packageName AND user_handle = :userHandle")
+    suspend fun updateLaunchDelay(
+        className: String,
+        packageName: String,
+        userHandle: Int,
+        delaySeconds: Int
+    )
+
     @Transaction
     suspend fun deleteAppsTransaction(apps: List<AppInfoEntity>) {
         for (app in apps) {

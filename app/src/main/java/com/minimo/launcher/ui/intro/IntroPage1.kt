@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.minimo.launcher.R
+import com.minimo.launcher.ui.components.AppButton
 import com.minimo.launcher.ui.theme.Dimens
 
 @Composable
@@ -48,7 +49,10 @@ internal fun IntroPage1(
                 textAlign = TextAlign.Center
             )
         }
-        IntroBottomButton(
+        AppButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = Dimens.APP_HORIZONTAL_SPACING),
             text = stringResource(R.string.get_started),
             onClick = onContinueClick
         )

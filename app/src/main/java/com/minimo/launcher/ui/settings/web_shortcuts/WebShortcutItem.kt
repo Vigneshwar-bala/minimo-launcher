@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -69,7 +67,7 @@ fun WebShortcutItem(
         Box {
             IconButton(onClick = { isMenuExpanded = true }) {
                 Icon(
-                    imageVector = Icons.Default.MoreVert,
+                    painter = painterResource(R.drawable.ic_more_vert),
                     contentDescription = null
                 )
             }

@@ -6,10 +6,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -46,7 +52,13 @@ class MainActivity : ComponentActivity() {
             val state by viewModel.state.collectAsState()
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val isHomeScreen = navBackStackEntry?.destination?.route == Routes.HOME
+            val currentRoute = navBackStackEntry?.destination?.route
+            val isHomeScreen = currentRoute == Routes.HOME
+            val enableWallpaperOnCurrentScreen = when (currentRoute) {
+                Routes.HOME -> state.enableWallpaper
+                Routes.APP_DRAWER -> state.enableWallpaperOnDrawer
+                else -> false
+            }
 
             ObserveNavigationEvents(
                 navController = navController,
@@ -60,21 +72,36 @@ class MainActivity : ComponentActivity() {
                 useDynamicTheme = state.useDynamicTheme,
                 blackTheme = state.blackTheme,
                 setWallpaperToThemeColor = state.setWallpaperToThemeColor,
-                enableWallpaper = state.enableWallpaper,
+                enableWallpaper = enableWallpaperOnCurrentScreen,
                 isHomeScreen = isHomeScreen,
                 lightTextOnWallpaper = state.lightTextOnWallpaper,
                 fontPreference = state.fontPreference
             ) {
-                AppNavGraph(
-                    navController = navController,
-                    homeViewModel = homeViewModel,
-                    enableWallpaper = state.enableWallpaper,
-                    statusBarVisible = state.statusBarVisible,
-                    navigationBarVisible = state.navigationBarVisible,
-                    onBackPressed = {
-                        onBackPressedDispatcher.onBackPressed()
-                    }
-                )
+                val backgroundColor = when {
+                    !enableWallpaperOnCurrentScreen -> MaterialTheme.colorScheme.surface
+                    state.dimWallpaper -> Color.Black.copy(
+                        alpha = state.dimWallpaperPercentage / 100f
+                    )
+
+                    else -> Color.Transparent
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(backgroundColor)
+                ) {
+                    AppNavGraph(
+                        navController = navController,
+                        homeViewModel = homeViewModel,
+                        enableWallpaper = state.enableWallpaper,
+                        statusBarVisible = state.statusBarVisible,
+                        navigationBarVisible = state.navigationBarVisible,
+                        onBackPressed = {
+                            onBackPressedDispatcher.onBackPressed()
+                        }
+                    )
+                }
             }
         }
     }

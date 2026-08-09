@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -59,19 +60,18 @@ import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import com.minimo.launcher.R
 import com.minimo.launcher.ui.components.RenameDialog
 import com.minimo.launcher.ui.home.components.AppDrawerFastScroller
 import com.minimo.launcher.ui.home.components.AppDrawerSearch
+import com.minimo.launcher.ui.home.components.AppLaunchConfirmationDialog
 import com.minimo.launcher.ui.home.components.AppNameItem
+import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.ui.home.components.MinimoSettingsItem
 import com.minimo.launcher.ui.home.components.appIconSizeFor
 import com.minimo.launcher.utils.Constants
-import com.minimo.launcher.utils.launchApp
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.launchAppInfo
 import com.minimo.launcher.utils.uninstallApp
 import kotlinx.coroutines.delay
@@ -90,7 +90,6 @@ fun AppDrawerScreen(
     onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -137,12 +136,9 @@ fun AppDrawerScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.launchApp.collect { app ->
-                hideKeyboardWithClearFocus()
-                context.launchApp(app.packageName, app.className, app.userHandle)
-            }
+    LaunchedEffect(state.launchConfirmDialog?.deadlineElapsedRealtimeMillis) {
+        if (state.launchConfirmDialog != null) {
+            hideKeyboardWithClearFocus()
         }
     }
 
@@ -156,10 +152,41 @@ fun AppDrawerScreen(
             }
     }
 
+    val enableWallpaper = state.enableWallpaperOnDrawer
     val surfaceColor = MaterialTheme.colorScheme.surface
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
     val useDarkIconsOnSurface = useDarkIconsOnColor(surfaceColor)
+    val useDarkSystemBarIcons = if (enableWallpaper) {
+        !state.lightTextOnWallpaper
+    } else {
+        useDarkIconsOnSurface
+    }
 
-    ApplySystemBarIconColor(useDarkIconsOnSurface)
+    ApplySystemBarIconColor(useDarkSystemBarIcons)
+
+    val textColor = remember(
+        enableWallpaper,
+        state.lightTextOnWallpaper,
+        onSurfaceColor
+    ) {
+        if (enableWallpaper) {
+            if (state.lightTextOnWallpaper) Color.White else Color.Black
+        } else {
+            onSurfaceColor
+        }
+    }
+    val textShadow = remember(enableWallpaper, state.lightTextOnWallpaper) {
+        if (enableWallpaper && state.lightTextOnWallpaper) {
+            Shadow(
+                color = Color.Black.copy(alpha = 0.5f),
+                offset = Offset(2f, 2f),
+                blurRadius = 4f
+            )
+        } else {
+            null
+        }
+    }
+    val wallpaperContentColor = if (enableWallpaper) textColor else null
 
     var swipeYAccumulator by remember { mutableFloatStateOf(0f) }
     val closeGestureEnabledState = rememberUpdatedState(pointerDragCloseEnabled)
@@ -204,9 +231,22 @@ fun AppDrawerScreen(
 
     val showFastScroller =
         state.enableFastScroller && state.searchText.isBlank() && state.filteredAllApps.isNotEmpty()
-    val endContentPadding = if (state.enableFastScroller) 40.dp else 0.dp
-    val startContentPadding =
-        if (state.drawerAppsArrangementHorizontal == Arrangement.Start) 0.dp else endContentPadding
+    val fastScrollerContentPadding = if (state.enableFastScroller) 40.dp else 0.dp
+    val fastScrollerAtStart = state.fastScrollerAlignment == FastScrollerAlignment.Left
+    val startContentPadding = if (
+        !fastScrollerAtStart && state.drawerAppsArrangementHorizontal == Arrangement.Start
+    ) {
+        0.dp
+    } else {
+        fastScrollerContentPadding
+    }
+    val endContentPadding = if (
+        fastScrollerAtStart && state.drawerAppsArrangementHorizontal == Arrangement.End
+    ) {
+        0.dp
+    } else {
+        fastScrollerContentPadding
+    }
 
     Scaffold(
         modifier = Modifier
@@ -214,7 +254,7 @@ fun AppDrawerScreen(
             .markPointerDragForDrawerClose(
                 onPointerDragCloseEnabledChange = { pointerDragCloseEnabled = it }
             ),
-        containerColor = surfaceColor,
+        containerColor = Color.Transparent,
         contentWindowInsets = if (bottomSearchVisible) {
             ScaffoldDefaults
                 .contentWindowInsets
@@ -242,7 +282,9 @@ fun AppDrawerScreen(
                         onSettingsClick = {
                             hideKeyboardWithClearFocus()
                             onSettingsClick()
-                        }
+                        },
+                        wallpaperContentColor = wallpaperContentColor,
+                        wallpaperTextShadow = textShadow
                     )
                 }
 
@@ -280,7 +322,9 @@ fun AppDrawerScreen(
                                     verticalPadding = state.homeAppVerticalPadding.dp,
                                     showAppIcon = state.showAppIconInDrawer,
                                     appIconSizeScale = state.appIconSizePercent / 100f,
-                                    appIconAlignment = state.drawerAppIconAlignment
+                                    appIconAlignment = state.drawerAppIconAlignment,
+                                    textColor = textColor,
+                                    textShadow = textShadow
                                 )
                             } else {
                                 val textSize = if (state.applyHomeAppSizeToAllApps) {
@@ -311,11 +355,7 @@ fun AppDrawerScreen(
                                     isWorkProfile = appInfo.isWorkProfile,
                                     onClick = {
                                         hideKeyboardWithClearFocus()
-                                        context.launchApp(
-                                            appInfo.packageName,
-                                            appInfo.className,
-                                            appInfo.userHandle
-                                        )
+                                        viewModel.onAppLaunchRequest(appInfo)
                                     },
                                     onToggleFavouriteClick = {
                                         viewModel.onToggleFavouriteAppClick(appInfo)
@@ -323,6 +363,9 @@ fun AppDrawerScreen(
                                     onRenameClick = { viewModel.onRenameAppClick(appInfo) },
                                     onToggleHideClick = { viewModel.onToggleHideClick(appInfo) },
                                     onAppInfoClick = { context.launchAppInfo(appInfo) },
+                                    onLaunchDelayClick = {
+                                        viewModel.onLaunchDelayClick(appInfo)
+                                    },
                                     appsArrangement = state.drawerAppsArrangementHorizontal,
                                     onLongClick = ::hideKeyboardWithClearFocus,
                                     onUninstallClick = { context.uninstallApp(appInfo) },
@@ -336,7 +379,9 @@ fun AppDrawerScreen(
                                     bottomSheetNavigationBarVisible = navigationBarVisible,
                                     useDarkBottomSheetStatusBarIcons = useDarkIconsOnSurface,
                                     useDarkBottomSheetNavigationBarIcons = useDarkIconsOnSurface,
-                                    verticalPadding = state.homeAppVerticalPadding.dp
+                                    verticalPadding = state.homeAppVerticalPadding.dp,
+                                    textColor = textColor,
+                                    shadow = textShadow
                                 )
                             }
                         }
@@ -346,8 +391,27 @@ fun AppDrawerScreen(
                         AppDrawerFastScroller(
                             apps = state.filteredAllApps,
                             listState = allAppsLazyListState,
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                            onInteractionStart = ::hideKeyboardWithClearFocus
+                            modifier = Modifier.align(
+                                if (fastScrollerAtStart) {
+                                    Alignment.CenterStart
+                                } else {
+                                    Alignment.CenterEnd
+                                }
+                            ),
+                            isAtStart = fastScrollerAtStart,
+                            onInteractionStart = ::hideKeyboardWithClearFocus,
+                            textColor = textColor,
+                            textShadow = textShadow,
+                            indicatorColor = if (enableWallpaper) {
+                                textColor
+                            } else {
+                                onSurfaceColor
+                            },
+                            indicatorTextColor = if (enableWallpaper) {
+                                if (state.lightTextOnWallpaper) Color.Black else Color.White
+                            } else {
+                                surfaceColor
+                            }
                         )
                     }
                 }
@@ -363,7 +427,9 @@ fun AppDrawerScreen(
                         onSettingsClick = {
                             hideKeyboardWithClearFocus()
                             onSettingsClick()
-                        }
+                        },
+                        wallpaperContentColor = wallpaperContentColor,
+                        wallpaperTextShadow = textShadow
                     )
                 }
             }
@@ -379,6 +445,23 @@ fun AppDrawerScreen(
             currentName = app.name,
             onRenameClick = viewModel::onRenameApp,
             onCancelClick = viewModel::onDismissRenameAppDialog
+        )
+    }
+
+    state.launchDelayDialog?.let { app ->
+        LaunchDelayDialog(
+            app = app,
+            onSave = viewModel::onUpdateLaunchDelay,
+            onDismiss = viewModel::onDismissLaunchDelayDialog
+        )
+    }
+
+    state.launchConfirmDialog?.let { pendingLaunch ->
+        AppLaunchConfirmationDialog(
+            app = pendingLaunch.app,
+            deadlineElapsedRealtimeMillis = pendingLaunch.deadlineElapsedRealtimeMillis,
+            onLaunch = viewModel::onConfirmAppLaunch,
+            onDismiss = viewModel::onDismissAppLaunch
         )
     }
 }

@@ -28,7 +28,10 @@ data class AppInfoEntity(
     val isHidden: Boolean,
 
     @ColumnInfo(name = "order_index", defaultValue = "0")
-    val orderIndex: Int
+    val orderIndex: Int,
+
+    @ColumnInfo(name = "launch_delay_seconds", defaultValue = "0")
+    val launchDelaySeconds: Int = 0
 ) {
     @get:Ignore
     val id: String

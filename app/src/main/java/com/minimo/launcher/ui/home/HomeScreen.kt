@@ -2,7 +2,6 @@ package com.minimo.launcher.ui.home
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -39,8 +38,9 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.minimo.launcher.R
 import com.minimo.launcher.ui.components.RenameDialog
+import com.minimo.launcher.ui.home.components.AppLaunchConfirmationDialog
 import com.minimo.launcher.ui.home.components.HomeBody
-import com.minimo.launcher.utils.launchAppFromPreference
+import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.utils.lockScreen
 import com.minimo.launcher.utils.showNotificationDrawer
 
@@ -146,35 +146,9 @@ fun HomeScreen(
             useDarkIconsOnSurface = useDarkIconsOnSurface
         )
 
-    val boxBackgroundColor = remember(
-        enableWallpaper,
-        state.dimWallpaper,
-        state.dimWallpaperPercentage,
-        surfaceColor
-    ) {
-        if (enableWallpaper) {
-            if (state.dimWallpaper) {
-                Color.Black.copy(alpha = state.dimWallpaperPercentage / 100f)
-            } else {
-                Color.Transparent
-            }
-        } else {
-            surfaceColor
-        }
-    }
-
-    val scaffoldContainerColor = remember(enableWallpaper, surfaceColor) {
-        if (enableWallpaper) {
-            Color.Transparent
-        } else {
-            surfaceColor
-        }
-    }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(boxBackgroundColor)
             .windowInsetsPadding(safeDrawingTop)
             .pointerInput(state.doubleTapToLock) {
                 detectTapGestures(onDoubleTap = {
@@ -188,9 +162,9 @@ fun HomeScreen(
                     onDragStart = { swipeXAccumulator = 0f },
                     onDragEnd = {
                         if (swipeXAccumulator > swipeRightThreshold) {
-                            context.launchAppFromPreference(state.swipeRightAppPreference)
+                            viewModel.onPreferenceAppLaunchRequest(state.swipeRightAppPreference)
                         } else if (swipeXAccumulator < swipeLeftThreshold) {
-                            context.launchAppFromPreference(state.swipeLeftAppPreference)
+                            viewModel.onPreferenceAppLaunchRequest(state.swipeLeftAppPreference)
                         }
                         swipeXAccumulator = 0f
                     },
@@ -201,7 +175,7 @@ fun HomeScreen(
             }
     ) {
         Scaffold(
-            containerColor = scaffoldContainerColor,
+            containerColor = Color.Transparent,
             contentWindowInsets = WindowInsets(0, 0, 0, 0)
         ) { paddingValues ->
             if (state.initialLoaded) {
@@ -230,6 +204,23 @@ fun HomeScreen(
             currentName = app.name,
             onRenameClick = viewModel::onRenameApp,
             onCancelClick = viewModel::onDismissRenameAppDialog
+        )
+    }
+
+    state.launchDelayDialog?.let { app ->
+        LaunchDelayDialog(
+            app = app,
+            onSave = viewModel::onUpdateLaunchDelay,
+            onDismiss = viewModel::onDismissLaunchDelayDialog
+        )
+    }
+
+    state.launchConfirmDialog?.let { pendingLaunch ->
+        AppLaunchConfirmationDialog(
+            app = pendingLaunch.app,
+            deadlineElapsedRealtimeMillis = pendingLaunch.deadlineElapsedRealtimeMillis,
+            onLaunch = viewModel::onConfirmAppLaunch,
+            onDismiss = viewModel::onDismissAppLaunch
         )
     }
 }

@@ -3,6 +3,7 @@ package com.minimo.launcher.ui.settings.customisation
 import com.minimo.launcher.ui.theme.ThemeMode
 import com.minimo.launcher.utils.AppIconAlignment
 import com.minimo.launcher.utils.Constants
+import com.minimo.launcher.utils.FastScrollerAlignment
 import com.minimo.launcher.utils.HomeAppsAlignmentHorizontal
 import com.minimo.launcher.utils.HomeAppsAlignmentVertical
 import com.minimo.launcher.utils.HomeClockAlignment
@@ -27,6 +28,7 @@ data class CustomisationState(
     val blackTheme: Boolean = false,
     val setWallpaperToThemeColor: Boolean = false,
     val enableWallpaper: Boolean = false,
+    val enableWallpaperOnDrawer: Boolean = false,
     val homeClockMode: HomeClockMode? = null,
     val doubleTapToLock: Boolean = false,
     val twentyFourHourFormat: Boolean = false,
@@ -63,5 +65,6 @@ data class CustomisationState(
     val minimoSettingsPosition: MinimoSettingsPosition = MinimoSettingsPosition.Auto,
     val keyboardOpenDelay: Long = Constants.DEFAULT_KEYBOARD_OPEN_DELAY,
     val enableFastScroller: Boolean = false,
+    val fastScrollerAlignment: FastScrollerAlignment = FastScrollerAlignment.Right,
     val backOpensAppDrawer: Boolean = true
 )

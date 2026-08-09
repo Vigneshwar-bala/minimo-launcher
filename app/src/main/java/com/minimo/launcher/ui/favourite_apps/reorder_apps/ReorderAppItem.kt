@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -14,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import com.minimo.launcher.R
 import com.minimo.launcher.ui.entities.AppInfo
 import com.minimo.launcher.ui.home.components.AppNameItem
 import com.minimo.launcher.ui.theme.Dimens
@@ -42,6 +41,7 @@ fun ReorderAppItem(
             onRenameClick = { },
             onToggleHideClick = { },
             onAppInfoClick = { },
+            onLaunchDelayClick = { },
             appsArrangement = Arrangement.Start,
             textSize = Constants.DEFAULT_HOME_TEXT_SIZE.sp,
             onUninstallClick = { },
@@ -58,7 +58,7 @@ fun ReorderAppItem(
                 )
             ) {
                 Icon(
-                    Icons.Default.KeyboardArrowUp,
+                    painter = painterResource(R.drawable.ic_keyboard_arrow_up),
                     contentDescription = null
                 )
             }
@@ -70,7 +70,7 @@ fun ReorderAppItem(
                 )
             ) {
                 Icon(
-                    Icons.Default.KeyboardArrowDown,
+                    painter = painterResource(R.drawable.ic_keyboard_arrow_down),
                     contentDescription = null
                 )
             }

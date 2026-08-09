@@ -14,8 +14,8 @@ android {
         applicationId = "com.minimo.launcher"
         minSdk = 26
         targetSdk = 36
-        versionCode = 125
-        versionName = "1.32.0"
+        versionCode = 134
+        versionName = "1.33.0"
     }
 
     buildFeatures {
@@ -77,14 +77,11 @@ room {
 val playStoreImplementation by configurations
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2026.06.00"))
+    implementation(platform("androidx.compose:compose-bom:2026.06.01"))
 
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-core")
-    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.ui:ui-graphics")
 
-    implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.appcompat:appcompat:1.7.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
@@ -94,9 +91,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.11.0")
 
-    implementation("com.google.dagger:hilt-android:2.59.2")
-    ksp("com.google.dagger:hilt-compiler:2.59.2")
-    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+    implementation("com.google.dagger:hilt-android:2.60.1")
+    ksp("com.google.dagger:hilt-compiler:2.60.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
 
     implementation("androidx.room:room-runtime:2.8.4")
     ksp("androidx.room:room-compiler:2.8.4")

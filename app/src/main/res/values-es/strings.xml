@@ -11,6 +11,7 @@
 
     <string name="favourite_apps">Apps favoritas</string>
     <string name="hidden_apps">Apps ocultas</string>
+    <string name="hidden_apps_long_press_hint">Mantén pulsada una app para abrirla.</string>
     <string name="customisation">Personalización</string>
     <string name="set_default_launcher">Establecer como launcher predeterminado</string>
     <string name="settings">Ajustes</string>
@@ -42,6 +43,16 @@
     <string name="unhide_app">Mostrar app</string>
     <string name="app_info">Información de la app</string>
     <string name="uninstall">Desinstalar</string>
+    <string name="launch_delay">Retraso de apertura</string>
+    <string name="launch_delay_description">Espera antes de abrir esta app.\nUsa 0 para no aplicar retraso.</string>
+    <string name="seconds">Segundos</string>
+    <string name="save">Guardar</string>
+    <plurals name="launch_delay_remaining">
+        <item quantity="one">Queda %1$d segundo</item>
+        <item quantity="other">Quedan %1$d segundos</item>
+    </plurals>
+    <string name="ready_to_launch">Lista para abrir</string>
+    <string name="launch">Abrir</string>
     <string name="show_status_bar">Mostrar barra de estado</string>
     <string name="show_navigation_bar">Mostrar barra de navegación</string>
     <string name="show_keyboard">Mostrar teclado</string>
@@ -118,7 +129,8 @@
     <string name="bottom">Abajo</string>
     <string name="home_apps_alignment_vertical">Alineación vertical de apps en inicio</string>
     <string name="drawer_apps_alignment_horizontal">Alineación horizontal de apps en el cajón</string>
-    <string name="enable_wallpaper">Activar fondo de pantalla</string>
+    <string name="enable_wallpaper">Activar fondo de pantalla en la pantalla de inicio</string>
+    <string name="enable_wallpaper_on_drawer">Activar fondo de pantalla en el cajón de aplicaciones</string>
     <string name="dim_wallpaper">Atenuar fondo de pantalla</string>
     <string name="dim_percentage">Porcentaje de atenuación:</string>
     <string name="light_text_on_wallpaper">Texto claro sobre el fondo de pantalla</string>
@@ -135,6 +147,7 @@
     <string name="none">Ninguna</string>
     <string name="font">Fuente</string>
     <string name="fast_scroller">Desplazamiento rápido</string>
+    <string name="fast_scroller_alignment">Alineación del desplazamiento rápido</string>
     <string name="fast_scroller_description">Mostrar una barra de desplazamiento rápido A-Z en el cajón de apps</string>
     <string name="back_opens_drawer">Atrás abre el cajón de apps</string>
     <string name="back_opens_drawer_description">Pulsa Atrás en la pantalla de inicio para abrir el cajón de apps</string>
