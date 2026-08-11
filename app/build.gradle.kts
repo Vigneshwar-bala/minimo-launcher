@@ -103,6 +103,8 @@ dependencies {
 
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    implementation("net.objecthunter:exp4j:0.4.8")
+
     playStoreImplementation("com.android.billingclient:billing-ktx:8.3.0")
     playStoreImplementation("com.google.android.play:review-ktx:2.0.2")
 }

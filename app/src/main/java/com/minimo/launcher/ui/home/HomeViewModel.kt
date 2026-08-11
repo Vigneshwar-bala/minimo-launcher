@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import net.objecthunter.exp4j.ExpressionBuilder
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -449,15 +450,48 @@ class HomeViewModel @Inject constructor(
             includeHiddenApps = _state.value.showHiddenAppsInSearch,
             ignoreSpecialCharacters = _state.value.ignoreSpecialCharacters
         )
+
+        val calculatorResult = evaluateExpression(searchText)
+
         _state.update {
             it.copy(
                 searchText = searchText,
                 filteredAllApps = filteredAllApps,
+                calculatorResult = calculatorResult
             )
         }
         if (searchText.isNotBlank() && _state.value.autoOpenApp && filteredAllApps.size == 1) {
             onAppLaunchRequest(filteredAllApps[0])
         }
+    }
+
+    private fun evaluateExpression(expr: String): String? {
+        if (expr.isBlank()) return null
+        val mathRegex = Regex("^[0-9+\\-*/(). ]+$")
+        if (!mathRegex.matches(expr)) return null
+
+        return try {
+            val expression = ExpressionBuilder(expr).build()
+            val result = expression.evaluate()
+
+            // If the result is the same as the input number, don't show it
+            if (result == expr.trim().toDoubleOrNull()) return null
+
+            // Format result to remove .0 if it's an integer
+            val formattedResult = if (result == result.toLong().toDouble()) {
+                result.toLong().toString()
+            } else {
+                result.toString()
+            }
+            "${expr.trim()} = $formattedResult"
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun onCalculatorResultClick(result: String) {
+        val cleanResult = result.substringAfter("=").trim()
+        onSearchTextChange(cleanResult)
     }
 
     /**

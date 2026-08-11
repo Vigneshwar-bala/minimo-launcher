@@ -67,6 +67,7 @@ import com.minimo.launcher.ui.home.components.AppDrawerFastScroller
 import com.minimo.launcher.ui.home.components.AppDrawerSearch
 import com.minimo.launcher.ui.home.components.AppLaunchConfirmationDialog
 import com.minimo.launcher.ui.home.components.AppNameItem
+import com.minimo.launcher.ui.home.components.CalculatorResultItem
 import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.ui.home.components.MinimoSettingsItem
 import com.minimo.launcher.ui.home.components.appIconSizeFor
@@ -305,6 +306,26 @@ fun AppDrawerScreen(
                             end = endContentPadding
                         )
                     ) {
+                        state.calculatorResult?.let { result ->
+                            item(key = "calculator_result") {
+                                CalculatorResultItem(
+                                    modifier = Modifier.animateItem(),
+                                    result = result,
+                                    onClick = {
+                                        viewModel.onCalculatorResultClick(result)
+                                    },
+                                    appsArrangement = state.drawerAppsArrangementHorizontal,
+                                    textSize = if (state.applyHomeAppSizeToAllApps) {
+                                        state.homeTextSize.sp
+                                    } else {
+                                        20.sp
+                                    },
+                                    verticalPadding = state.homeAppVerticalPadding.dp,
+                                    textColor = textColor,
+                                    shadow = textShadow
+                                )
+                            }
+                        }
                         items(items = state.filteredAllApps, key = { it.id }) { appInfo ->
                             if (appInfo.packageName == Constants.MINIMO_SETTINGS_PACKAGE) {
                                 MinimoSettingsItem(
