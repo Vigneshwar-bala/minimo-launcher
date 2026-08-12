@@ -26,6 +26,7 @@ data class HomeScreenState(
     val launchConfirmDialog: PendingAppLaunch? = null,
     val searchText: String = "",
     val calculatorResult: String? = null,
+    val googleSearchSuggestion: String? = null,
     val appsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,
     val drawerAppsArrangementHorizontal: Arrangement.Horizontal = Arrangement.Start,
     val appsArrangementVertical: Arrangement.Vertical = Arrangement.Center,

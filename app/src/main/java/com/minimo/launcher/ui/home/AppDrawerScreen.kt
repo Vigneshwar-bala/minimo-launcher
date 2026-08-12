@@ -68,6 +68,7 @@ import com.minimo.launcher.ui.home.components.AppDrawerSearch
 import com.minimo.launcher.ui.home.components.AppLaunchConfirmationDialog
 import com.minimo.launcher.ui.home.components.AppNameItem
 import com.minimo.launcher.ui.home.components.CalculatorResultItem
+import com.minimo.launcher.ui.home.components.GoogleSearchSuggestionItem
 import com.minimo.launcher.ui.home.components.LaunchDelayDialog
 import com.minimo.launcher.ui.home.components.MinimoSettingsItem
 import com.minimo.launcher.ui.home.components.appIconSizeFor
@@ -321,6 +322,20 @@ fun AppDrawerScreen(
                                         20.sp
                                     },
                                     verticalPadding = state.homeAppVerticalPadding.dp,
+                                    textColor = textColor,
+                                    shadow = textShadow
+                                )
+                            }
+                        }
+                        state.googleSearchSuggestion?.let { query ->
+                            item(key = "google_search_suggestion") {
+                                GoogleSearchSuggestionItem(
+                                    modifier = Modifier.animateItem(),
+                                    query = query,
+                                    onClick = {
+                                        viewModel.onGoogleSearchClick(query)
+                                    },
+                                    appsArrangement = state.drawerAppsArrangementHorizontal,
                                     textColor = textColor,
                                     shadow = textShadow
                                 )

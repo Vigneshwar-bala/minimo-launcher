@@ -18,7 +18,8 @@ The calculator feature allows users to perform quick calculations directly from 
 
 ### 4. UI Components
 - Created [CalculatorResultItem.kt](file:///C:/Users/vigne/Downloads/minimo-launcher/app/src/main/java/com/minimo/launcher/ui/home/components/CalculatorResultItem.kt): A simple Composable to display the calculation result at the top of the search list.
-- Integrated the new item into [AppDrawerScreen.kt](file:///C:/Users/vigne/Downloads/minimo-launcher/app/src/main/java/com/minimo/launcher/ui/home/AppDrawerScreen.kt) within the `LazyColumn`.
+- Created [GoogleSearchSuggestionItem.kt](file:///C:/Users/vigne/Downloads/minimo-launcher/app/src/main/java/com/minimo/launcher/ui/home/components/GoogleSearchSuggestionItem.kt): A suggestion row for Google searches, styled with an italic font and a search icon.
+- Integrated both items into [AppDrawerScreen.kt](file:///C:/Users/vigne/Downloads/minimo-launcher/app/src/main/java/com/minimo/launcher/ui/home/AppDrawerScreen.kt) within the `LazyColumn`.
 
 ## Verification Results
 
@@ -30,5 +31,7 @@ The calculator feature allows users to perform quick calculations directly from 
 2. Type a math expression in the search bar (e.g., `2 + 2 * 3`).
 3. Observe the result `2 + 2 * 3 = 8` appearing at the top of the list.
 4. Tap the result and verify the search text changes to `8`.
-5. Verify that typing non-math queries (like app names) continues to show app search results correctly.
-6. Verify that typing just a number (e.g., `42`) does not trigger the calculator result `42 = 42`.
+5. Type a "meaning" query (e.g., `meaning of serendipity`).
+6. Observe the "Search meaning in Google" suggestion appearing below the search bar.
+7. Click the suggestion and verify it opens the browser with the Google search results.
+8. Verify that typing non-math/non-meaning queries (like app names) continues to show app search results correctly.

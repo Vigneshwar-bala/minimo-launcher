@@ -1,6 +1,8 @@
 package com.minimo.launcher.ui.home
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.SystemClock
 import androidx.compose.foundation.layout.Arrangement
@@ -452,17 +454,36 @@ class HomeViewModel @Inject constructor(
         )
 
         val calculatorResult = evaluateExpression(searchText)
+        val googleSearchSuggestion = if (isMeaningQuery(searchText)) {
+            searchText
+        } else {
+            null
+        }
 
         _state.update {
             it.copy(
                 searchText = searchText,
                 filteredAllApps = filteredAllApps,
-                calculatorResult = calculatorResult
+                calculatorResult = calculatorResult,
+                googleSearchSuggestion = googleSearchSuggestion
             )
         }
         if (searchText.isNotBlank() && _state.value.autoOpenApp && filteredAllApps.size == 1) {
             onAppLaunchRequest(filteredAllApps[0])
         }
+    }
+
+    private fun isMeaningQuery(query: String): Boolean {
+        val trimmed = query.trim().lowercase()
+        return trimmed.startsWith("meaning of ") || 
+               trimmed.startsWith("meaning ") || 
+               trimmed.endsWith(" meaning")
+    }
+
+    fun onGoogleSearchClick(query: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=${Uri.encode(query)}"))
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        applicationContext.startActivity(intent)
     }
 
     private fun evaluateExpression(expr: String): String? {
